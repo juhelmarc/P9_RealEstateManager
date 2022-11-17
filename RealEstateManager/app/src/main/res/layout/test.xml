@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/media"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:padding="8dp"
+                    android:text="Media"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/detail_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:scrollbars="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/media"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:listitem="@layout/item_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/detail_recyclerview"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:padding="8dp"
+                    android:text="Descritption"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/description_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/description"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:padding="8dp"
+                    android:text="Descritption sdqsdqsdqdddddddddddddddddddddddddddddddddddddddddddddd"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="16dp"
+                    />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

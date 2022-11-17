@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.denzcoskun.imageslider.ImageSlider
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageSlider"
+        app:iss_auto_cycle="false"
+        app:iss_corner_radius="5"
+        app:iss_selected_dot="@drawable/default_selected_dot"
+        app:iss_unselected_dot="@drawable/default_unselected_dot"
+        app:iss_period="1000"
+        tools:ignore="MissingConstraints"
+        app:iss_text_align="CENTER"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

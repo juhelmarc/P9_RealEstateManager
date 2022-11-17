@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_detail">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/media"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="8dp"
+            android:text="Media"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/detail_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:scrollbars="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/media"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:listitem="@layout/item_detail"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/detail_recyclerview"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="8dp"
+            android:text="Descritption"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/description_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="8dp"
+            android:text="Descritption sdqsdqsdqdddddddddddddddddddddddddddddddddddddddddddddd"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="@dimen/text_detail"
+            />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/description_text"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/margin_start_bottom_view_detail"
+            android:background="@color/transparent"
+            app:cardElevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/surface_icon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/ic_baseline_surface"
+                    android:scaleType="centerCrop"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/surface_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/surface"
+                    android:layout_toEndOf="@+id/surface_icon"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/surface_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="750 m²"
+                    android:layout_toEndOf="@+id/surface_icon"
+                    android:layout_below="@+id/surface_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <ImageView
+                    android:id="@+id/nbr_room_icon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/ic_baseline_home"
+                    android:scaleType="centerCrop"
+                    android:layout_below="@+id/surface_value"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_room_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number_of_rooms"
+                    android:layout_toEndOf="@+id/nbr_room_icon"
+                    android:layout_below="@+id/surface_value"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_room_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="8"
+                    android:layout_toEndOf="@+id/nbr_room_icon"
+                    android:layout_below="@+id/nbr_room_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <ImageView
+                    android:id="@+id/nbr_bathroom_icon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/ic_baseline_bathtub"
+                    android:scaleType="centerCrop"
+                    android:layout_below="@+id/nbr_room_value"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_bathroom_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Number of bathrooms"
+                    android:layout_toEndOf="@+id/nbr_bathroom_icon"
+                    android:layout_below="@+id/nbr_room_value"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_bathroom_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2"
+                    android:layout_toEndOf="@+id/nbr_bathroom_icon"
+                    android:layout_below="@+id/nbr_bathroom_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <ImageView
+                    android:id="@+id/nbr_bedroom_icon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/ic_baseline_bed"
+                    android:scaleType="centerCrop"
+                    android:layout_below="@+id/nbr_bathroom_value"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_bedroom_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number_of_bedrooms"
+                    android:layout_toEndOf="@+id/nbr_bathroom_icon"
+                    android:layout_below="@+id/nbr_bathroom_value"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/nbr_bedroom_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="4"
+                    android:layout_toEndOf="@+id/nbr_bedroom_icon"
+                    android:layout_below="@+id/nbr_bedroom_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <ImageView
+                    android:id="@+id/location_icon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@+id/nbr_bathroom_text"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/ic_baseline_location" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:text="@string/location"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/address_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    tools:text="740 Park Avenue"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/town_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/address_value"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    tools:text="New York"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/postal_code_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/town_value"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    tools:text="NY 10021"
+                    android:textSize="@dimen/text_detail"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/state_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/postal_code_value"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    tools:text="United States"
+                    android:textSize="@dimen/text_detail"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <ImageView
+            android:id="@+id/static_map"
+            android:layout_width="@dimen/map"
+            android:layout_height="@dimen/map"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
