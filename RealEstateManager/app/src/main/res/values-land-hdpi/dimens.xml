@@ -3,7 +3,7 @@
     <dimen name="standard_margin">8dp</dimen>
     <dimen name="text_size_item_property">20sp</dimen>
     <bool name="isTablet">false</bool>
-    <dimen name="map">200dp</dimen>
+    <dimen name="map">170dp</dimen>
     <dimen name="padding_detail">8dp</dimen>
     <dimen name="icon_detail">22dp</dimen>
     <dimen name="text_detail">12sp</dimen>

@@ -51,8 +51,9 @@ class DetailFragment: Fragment() {
         viewModel.detailLiveData.observe(viewLifecycleOwner) {
             binding.staticMap.load("https://maps.googleapis.com/maps/api/staticmap?" +
                     "&markers=" + it.town + ", " + it.address + ", " + it.postalCode +
-                    "&zoom=18" +
+                    "&zoom=19" +
                     "&size=400x400" +
+                    "&maptype=roadmap" +
                     "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo" )
         }
         bindView(binding)
