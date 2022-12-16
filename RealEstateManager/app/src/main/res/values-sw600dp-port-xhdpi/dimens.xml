@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="standard_margin">8dp</dimen>
-    <dimen name="text_size_item_property">20sp</dimen>
     <bool name="isTablet">false</bool>
+
     <dimen name="map">450dp</dimen>
-    <dimen name="padding_detail">8dp</dimen>
-    <dimen name="text_detail">16sp</dimen>
     <dimen name="icon_detail">20dp</dimen>
-    <dimen name="text_title_detail">20sp</dimen>
     <dimen name="margin_start_bottom_view_detail">4dp</dimen>
     <dimen name="marge_between_cardview_detail">40dp</dimen>
 </resources>

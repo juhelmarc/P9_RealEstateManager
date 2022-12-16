@@ -8,41 +8,42 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.denzcoskun.imageslider.models.SlideModel
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
 import com.openclassrooms.realestatemanager.databinding.ItemDetailBinding
 
 
 
 class DetailAdapter(
 
-) : ListAdapter<SlideModel, DetailAdapter.MyViewHolder>(DiffCallback) {
-    var onItemClicked1: ((String) -> Unit)? = null
+) : ListAdapter<PropertyPicturesEntity, DetailAdapter.MyViewHolder>(DiffCallback) {
+    var onItemClicked: ((String) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(
         ItemDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClicked1)
+        holder.bind(getItem(position), onItemClicked)
     }
 
     class MyViewHolder(private val binding: ItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: SlideModel, onItemClicked: ((String) -> Unit)?) {
+        fun bind(item: PropertyPicturesEntity, onItemClicked: ((String) -> Unit)?) {
             binding.description.text = item.title
-            binding.propertyPicture.load(item.imageUrl)
+            binding.propertyPicture.load(item.url)
             binding.item.setOnClickListener {
-                onItemClicked?.invoke(item.imageUrl!!)
+                onItemClicked?.invoke(item.url!!)
             }
         }
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<SlideModel>() {
-            override fun areItemsTheSame(oldItem: SlideModel, newItem: SlideModel): Boolean {
+        private val DiffCallback = object : DiffUtil.ItemCallback<PropertyPicturesEntity>() {
+            override fun areItemsTheSame(oldItem: PropertyPicturesEntity, newItem: PropertyPicturesEntity): Boolean {
                 return (oldItem == newItem)
             }
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: SlideModel, newItem: SlideModel): Boolean {
+            override fun areContentsTheSame(oldItem: PropertyPicturesEntity, newItem: PropertyPicturesEntity): Boolean {
                 return oldItem == newItem
             }
         }

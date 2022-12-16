@@ -12,7 +12,7 @@ import com.openclassrooms.realestatemanager.databinding.ItemPropertyBinding
 
 
 class ListPropertyAdapter (
-    private val onItemClicked: (id : String) -> Unit
+    private val onItemClicked: (id : Long) -> Unit
 ) : ListAdapter<ListViewState, ListPropertyAdapter.MyViewHolder>(DiffCallback) {
 
 
@@ -27,13 +27,13 @@ class ListPropertyAdapter (
 
     class MyViewHolder(private val binding: ItemPropertyBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ListViewState, onItemClicked: (id: String) -> Unit) {
+        fun bind(item: ListViewState, onItemClicked: (id: Long) -> Unit) {
             binding.propertyType.text = item.type
             binding.propertyTown.text = item.district
             binding.propertyPrice.text = "$${item.price}"
             binding.propertyPicture.load(item.mainPicture)
+            binding.realEstateAgent.text = item.agentName
             binding.item.setOnClickListener{
-                //todo -> invoke c'est quoi
                 onItemClicked.invoke(item.id)
             }
         }

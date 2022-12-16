@@ -31,7 +31,8 @@
         <activity android:name="com.openclassrooms.realestatemanager.ui.detail.DetailActivity" />
         <activity android:name=".ui.detailslider.DetailSliderActivity"
             android:screenOrientation="landscape"/>
-
+        <activity android:name=".ui.addProperty.AddOrUpdatePropertyActivity"
+            />
 
     </application>
 

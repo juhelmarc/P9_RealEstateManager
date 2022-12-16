@@ -1,9 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.detailslider
 
 import com.denzcoskun.imageslider.models.SlideModel
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
 
 data class DetailSliderViewState (
-    val id : String,
-    val district : String,
-    val listPicture : ArrayList<SlideModel>,
+
+    val listPicture : List<PropertyPicturesEntity>?,
 )

@@ -2,13 +2,17 @@ package com.openclassrooms.realestatemanager.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
+import com.openclassrooms.realestatemanager.ui.addProperty.AddOrUpdatePropertyActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
-import com.openclassrooms.realestatemanager.ui.detailslider.DetailSliderFragment
 import com.openclassrooms.realestatemanager.ui.list.ListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,11 +21,14 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
 
+    private val ISADDACTIVITY = "0"
+    private val ISUPDATEACTIVITY = "1"
+
     override fun onCreate(saveInstanceState : Bundle?) {
         super.onCreate(saveInstanceState)
-
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         //Si l'activité n'est pas en pause -> ajout du listFragment dans le frameLayout
         if(saveInstanceState == null){
             supportFragmentManager.beginTransaction()
@@ -38,26 +45,40 @@ class MainActivity : AppCompatActivity() {
                     binding.containerDetail.id,
                     DetailFragment())
                 .commitNow()
-
         }
-
-
-
         viewModel.navigateSingleLiveEvent.observe(this) {
             when(it) {
                 //-> = alors je fais
                 MainViewAction.NavigateToDetailActivity -> startActivity(Intent(this, DetailActivity::class.java))
             }
         }
+
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
+                R.id.add_property -> {
+                    startActivity(Intent(this@MainActivity, AddOrUpdatePropertyActivity::class.java).putExtra("AddOrUpdate", ISADDACTIVITY))
+                    true
+                }
+                R.id.search -> {
+
+                    true
+                }
+                R.id.edit_current_property -> {
+                    startActivity(Intent(this@MainActivity, AddOrUpdatePropertyActivity::class.java).putExtra("AddOrUpdate", ISUPDATEACTIVITY))
+                    true
+                }
+                else -> false
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-
         viewModel.onConfigurationChanged(resources.getBoolean(R.bool.isTablet))
     }
-
-
-
 
 }

@@ -32,11 +32,14 @@ class ListFragment : Fragment() {
             //Au click nous transmettons au repository (currentPropertyRepository) via le viewmodel l'id de l'item sur lequel l'utilisateur à cliqué
             //Cet id sera récupéré par le detailFragment via son viewmodel dans le currentPropertyRepository
             viewModel.onItemClicked(it)
+//            viewModel.onItemClickedFlow(it)
         }
         recyclerView.adapter = adapter
+
         viewModel.propertyListLiveData.observe(viewLifecycleOwner){
             adapter.submitList(it)
         }
+
     }
 
     override fun onDestroyView() {
