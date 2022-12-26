@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.openclassrooms.realestatemanager.data.dao.RoomDao
 import com.openclassrooms.realestatemanager.data.database.AppDatabase
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +46,7 @@ object DoaModule {
                         roomDao.insertAgent(AgentEntity(name = "007"))
                         roomDao.insertAgent(AgentEntity(name = "Chuck Norris"))
                         roomDao.insertAgent(AgentEntity(name = "Agent Smith"))
+
                     }
                 }
             })

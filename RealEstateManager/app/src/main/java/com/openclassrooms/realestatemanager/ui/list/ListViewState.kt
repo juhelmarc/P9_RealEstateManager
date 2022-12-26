@@ -5,7 +5,7 @@ import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 data class ListViewState (
     val type: String?,
     val district: String?,
-    val price: Int?,
+    val price: String?,
     val mainPicture: String?,
     val id : Long,
     val agentName: String,

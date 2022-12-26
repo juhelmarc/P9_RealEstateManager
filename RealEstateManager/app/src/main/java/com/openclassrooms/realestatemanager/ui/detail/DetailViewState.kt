@@ -10,11 +10,11 @@ sealed class DetailViewState() {
         val description: String?,
         val town: String?,
         val address: String?,
-        val postalCode: Int?,
-        val surface: Int?,
-        val numberOfRooms: Int?,
-        val numberOfBathrooms: Int?,
-        val numberOfBedRooms: Int?,
+        val postalCode: String?,
+        val surface: String?,
+        val numberOfRooms: String?,
+        val numberOfBathrooms: String?,
+        val numberOfBedRooms: String?,
         val state: String?,
     ) : DetailViewState()
 

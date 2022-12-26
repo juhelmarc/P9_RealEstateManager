@@ -12,29 +12,29 @@ import androidx.room.PrimaryKey
 @Entity(foreignKeys = [ForeignKey(entity = AgentEntity::class,
     parentColumns = arrayOf("agentId"),
     childColumns = arrayOf("agentId" ))])
-class PropertyEntity(
+data class PropertyEntity(
     // pour inclure la classe Agent directement dans Property sans se soucier des clés étrangère.
     // Elle va ajouter automatiquement les champs de notre classe User dans Item et ainsi créer un relation
     // le prefix agent_ est obligatoire pour que ne nous ayons pas deux champs nommé id
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val agentId: Long,
-    val agentName: String,
-    val type: String?,
+    var agentId: Long,
+    var agentName: String,
+    var type: String?,
     val district: String?,
-    val price: Int?,
+    val price: String?,
     val description: String?,
-    val surface: Int?,
-    val numberOfRooms: Int?,
-    val numberOfBathrooms: Int?,
-    val numberOfBedrooms: Int?,
+    val surface: String?,
+    val numberOfRooms: String?,
+    val numberOfBathrooms: String?,
+    val numberOfBedrooms: String?,
     val town: String?,
     val address: String?,
-    val postalCode: Int?,
+    val postalCode: String?,
     val state: String?,
     val mainPicture: String?,
     val isAvailable: Boolean,
-    val entryDate: Long?,
-    val dateOfSale: Long?,
+    val entryDate: String?,
+    val dateOfSale: String?,
 
 //Ajouter ce champs dans le cas de l'utilisation de foreignKeys (plus haut)
 //    val agentId: String

@@ -5,7 +5,7 @@ import androidx.room.ForeignKey;
 
 
 @Entity
-class AgentEntity (
+data class AgentEntity (
     @PrimaryKey(autoGenerate = true) val agentId: Long = 0L,
     val name: String,
 ) {

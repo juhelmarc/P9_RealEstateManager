@@ -31,7 +31,7 @@ class DetailAdapter(
             binding.description.text = item.title
             binding.propertyPicture.load(item.url)
             binding.item.setOnClickListener {
-                onItemClicked?.invoke(item.url!!)
+                onItemClicked?.invoke(item.url)
             }
         }
     }

@@ -30,7 +30,7 @@ interface RoomDao {
     suspend fun insertPropertyPicture(propertyPicture: PropertyPicturesEntity)
 
     @Update
-    suspend fun updateProperty(property: PropertyPicturesEntity)
+    suspend fun updatePropertyPicture(property: PropertyPicturesEntity)
 
     @Query("SELECT * FROM AgentEntity WHERE agentId = :agentId")
     fun getAgentById(agentId: Long): Flow<AgentEntity>

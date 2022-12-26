@@ -3,6 +3,12 @@
     package="com.openclassrooms.realestatemanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera.any"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="28"/>
 
     <application
         android:name=".ui.MainApplication"
@@ -19,6 +25,7 @@
 
         </meta-data>
 <!--        android:value="${MAPS_API_KEY}"-->
+
         <activity
             android:name="com.openclassrooms.realestatemanager.ui.main.MainActivity"
             android:exported="true">
@@ -31,7 +38,7 @@
         <activity android:name="com.openclassrooms.realestatemanager.ui.detail.DetailActivity" />
         <activity android:name=".ui.detailslider.DetailSliderActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".ui.addProperty.AddOrUpdatePropertyActivity"
+        <activity android:name=".ui.addProperty.FormPropertyActivity"
             />
 
     </application>

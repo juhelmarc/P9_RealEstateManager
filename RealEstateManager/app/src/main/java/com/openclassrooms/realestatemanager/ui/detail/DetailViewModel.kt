@@ -2,8 +2,10 @@ package com.openclassrooms.realestatemanager.ui.detail
 
 
 import androidx.lifecycle.*
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
+import com.openclassrooms.realestatemanager.data.repositories.FormPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
@@ -12,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
-    private val currentPropertyRepository: CurrentPropertyRepository
+    private val currentPropertyRepository: CurrentPropertyRepository,
+    private val formPropertyRepository: FormPropertyRepository
 ) : ViewModel() {
     // On récupère l'id stocké dans le currentPropertyRepository et avec switchMap nous mettons l'id récupéré en parametre de la getPropertyByIdLiveData méthode
     //qui récupéra un objet Property correspondant à l'id que nous transformerons ensuite en DetailViewState object grâce au .map
@@ -74,8 +77,23 @@ class DetailViewModel @Inject constructor(
             it
     }.asLiveData()
 
+    val propertyToUpdateLiveData: LiveData<PropertyEntity> =
+        currentPropertyRepository.currentIdLiveData.switchMap { id ->
+            propertyRepository.getPropertyByIdFlow(id).map {
+                it
+            }.asLiveData()
+        }
+
+    fun setFormUpdate(propertyToUpdate: PropertyEntity) {
+        formPropertyRepository.setFormUpdate(propertyToUpdate)
+//        formPropertyRepository.setFormProperty(propertyToUpdate)
+    }
 
 
+
+    fun setFormPropertyIdUpdate(id: Long) {
+        propertyRepository.setCurrentId(id)
+    }
 
 
 

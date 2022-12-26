@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("propertyId" ))])
 
-class PropertyPicturesEntity (
+data class PropertyPicturesEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val propertyId: Long,

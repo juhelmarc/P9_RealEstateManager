@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
-import com.openclassrooms.realestatemanager.ui.addProperty.AddOrUpdatePropertyActivity
+import com.openclassrooms.realestatemanager.ui.addProperty.FormPropertyActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import com.openclassrooms.realestatemanager.ui.list.ListFragment
@@ -20,9 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
-
-    private val ISADDACTIVITY = "0"
-    private val ISUPDATEACTIVITY = "1"
 
     override fun onCreate(saveInstanceState : Bundle?) {
         super.onCreate(saveInstanceState)
@@ -60,7 +57,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
                 R.id.add_property -> {
-                    startActivity(Intent(this@MainActivity, AddOrUpdatePropertyActivity::class.java).putExtra("AddOrUpdate", ISADDACTIVITY))
+                    viewModel.setPropertyIdAdd()
+                    startActivity(Intent(this@MainActivity, FormPropertyActivity::class.java))
                     true
                 }
                 R.id.search -> {
@@ -68,7 +66,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.edit_current_property -> {
-                    startActivity(Intent(this@MainActivity, AddOrUpdatePropertyActivity::class.java).putExtra("AddOrUpdate", ISUPDATEACTIVITY))
+                    viewModel.propertyToUpdateLiveData.observe(this@MainActivity) {
+                        viewModel.setFormPropertyIdUpdate(it)
+                    }
+                    startActivity(Intent(this@MainActivity, FormPropertyActivity::class.java))
                     true
                 }
                 else -> false

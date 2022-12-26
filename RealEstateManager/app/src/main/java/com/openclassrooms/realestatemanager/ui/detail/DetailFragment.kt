@@ -68,17 +68,17 @@ class DetailFragment: Fragment() {
             when(property) {
                 is DetailViewState.Selected -> {
                     binding.descriptionText.text = property.description
-                    binding.surfaceValue.text = property.surface.toString()
-                    binding.nbrRoomValue.text = property.numberOfRooms.toString()
-                    binding.nbrBathroomValue.text = property.numberOfBathrooms.toString()
-                    binding.nbrBedroomValue.text = property.numberOfBedRooms.toString()
+                    binding.surfaceValue.text = property.surface
+                    binding.nbrRoomValue.text = property.numberOfRooms
+                    binding.nbrBathroomValue.text = property.numberOfBathrooms
+                    binding.nbrBedroomValue.text = property.numberOfBedRooms
                     binding.addressValue.text = property.address
                     binding.townValue.text = property.town
-                    binding.postalCodeValue.text = property.postalCode.toString()
+                    binding.postalCodeValue.text = property.postalCode
                     binding.stateValue.text = property.state
                     binding.staticMap.load(
                         "https://maps.googleapis.com/maps/api/staticmap?" +
-                                "&markers=" + property.town + ", " + property.address + ", " + property.postalCode.toString() +
+                                "&markers=" + property.town + ", " + property.address + ", " + property.postalCode +
                                 "&zoom=19" +
                                 "&size=400x400" +
                                 "&maptype=roadmap" +
@@ -106,13 +106,13 @@ class DetailFragment: Fragment() {
             when(defaultDetailViewState) {
             is DetailViewState.Selected -> {
                 binding.descriptionText.text = defaultDetailViewState.description
-                binding.surfaceValue.text = defaultDetailViewState.surface.toString()
-                binding.nbrRoomValue.text = defaultDetailViewState.numberOfRooms.toString()
-                binding.nbrBathroomValue.text = defaultDetailViewState.numberOfBathrooms.toString()
-                binding.nbrBedroomValue.text = defaultDetailViewState.numberOfBedRooms.toString()
+                binding.surfaceValue.text = defaultDetailViewState.surface
+                binding.nbrRoomValue.text = defaultDetailViewState.numberOfRooms
+                binding.nbrBathroomValue.text = defaultDetailViewState.numberOfBathrooms
+                binding.nbrBedroomValue.text = defaultDetailViewState.numberOfBedRooms
                 binding.addressValue.text = defaultDetailViewState.address
                 binding.townValue.text = defaultDetailViewState.town
-                binding.postalCodeValue.text = defaultDetailViewState.postalCode.toString()
+                binding.postalCodeValue.text = defaultDetailViewState.postalCode
                 binding.stateValue.text = defaultDetailViewState.state
                 binding.staticMap.load(
                     "https://maps.googleapis.com/maps/api/staticmap?" +

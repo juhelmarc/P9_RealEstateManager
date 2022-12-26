@@ -5,16 +5,19 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
-import com.openclassrooms.realestatemanager.ui.addProperty.AddOrUpdatePropertyActivity
+import com.openclassrooms.realestatemanager.ui.addProperty.FormPropertyActivity
+import com.openclassrooms.realestatemanager.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailActivity: AppCompatActivity() {
-    private val ISUPDATEACTIVITY = "1"
+
+    private val viewModel by viewModels<DetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,10 @@ class DetailActivity: AppCompatActivity() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
                 R.id.edit_current_property_detail -> {
-                    startActivity(Intent(this@DetailActivity, AddOrUpdatePropertyActivity::class.java).putExtra("AddOrUpdate", ISUPDATEACTIVITY))
+                    startActivity(Intent(this@DetailActivity, FormPropertyActivity::class.java))
+                    viewModel.propertyToUpdateLiveData.observe(this@DetailActivity) {
+                        viewModel.setFormPropertyIdUpdate(it.id)
+                    }
                     true
                 }
                 else -> false
