@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -18,19 +18,19 @@ interface RoomDao {
     fun getAllProperty(): Flow<List<PropertyEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProperty(property: PropertyEntity)
+    suspend fun insertProperty(property: PropertyEntity): Long
 
     @Update
     suspend fun updateProperty(property: PropertyEntity)
 
-    @Query("SELECT * FROM PropertyPicturesEntity WHERE propertyId = :propertyId" )
-    fun getAllPropertyPictures(propertyId: Long): Flow<List<PropertyPicturesEntity>>
+    @Query("SELECT * FROM PropertyPictureEntity WHERE propertyId = :propertyId")
+    fun getAllPropertyPictures(propertyId: Long): Flow<List<PropertyPictureEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPropertyPicture(propertyPicture: PropertyPicturesEntity)
+    suspend fun insertPropertyPicture(propertyPicture: PropertyPictureEntity)
 
     @Update
-    suspend fun updatePropertyPicture(property: PropertyPicturesEntity)
+    suspend fun updatePropertyPicture(property: PropertyPictureEntity)
 
     @Query("SELECT * FROM AgentEntity WHERE agentId = :agentId")
     fun getAgentById(agentId: Long): Flow<AgentEntity>

@@ -5,17 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import coil.imageLoader
 import coil.load
-import com.google.android.gms.maps.MapFragment
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.databinding.BottomViewDetailBinding
 import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
 import com.openclassrooms.realestatemanager.ui.detailslider.DetailSliderActivity
 
@@ -40,8 +36,12 @@ class DetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configureListPictureAdapter()
-        bindView()
-
+        //POIs
+        val recyclerViewChip: RecyclerView = binding.poiListDetail
+        recyclerViewChip.layoutManager = FlexboxLayoutManager(requireContext())
+        val chipAdapter = DetailChipAdapter()
+        recyclerViewChip.adapter = chipAdapter
+        //Pictures
         val recyclerView : RecyclerView = binding.detailRecyclerview
         recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false )
         adapter = DetailAdapter()
@@ -50,25 +50,12 @@ class DetailFragment: Fragment() {
         adapter.onItemClicked = {
             startActivity(Intent(context, DetailSliderActivity :: class.java))
         }
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun configureListPictureAdapter() {
-        viewModel.listPictureLiveData.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-    }
-    //TODO créer un DetailViewState.NotSelected -> pour afficher le detail de l'id = 1
-    private fun bindView() {
         viewModel.detailLiveData.observe(viewLifecycleOwner) { property ->
             when(property) {
                 is DetailViewState.Selected -> {
                     binding.descriptionText.text = property.description
-                    binding.surfaceValue.text = property.surface
+                    binding.surfaceValue.text = property.surface.toString()
                     binding.nbrRoomValue.text = property.numberOfRooms
                     binding.nbrBathroomValue.text = property.numberOfBathrooms
                     binding.nbrBedroomValue.text = property.numberOfBedRooms
@@ -86,15 +73,27 @@ class DetailFragment: Fragment() {
                     )
                     binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
                     binding.emptyListProperty.visibility = View.INVISIBLE
+                    chipAdapter.submitList(property.poiSelected)
                 }
                 is DetailViewState.Empty -> {
                     binding.emptyListProperty.visibility = View.VISIBLE
-
                 }
             }
-
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun configureListPictureAdapter() {
+        viewModel.listPictureLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+    }
+    //TODO créer un DetailViewState.NotSelected -> pour afficher le detail de l'id = 1
+
     private fun configureListPictureAdapterDefault() {
         viewModel.listPictureLiveDataDefault.observe(viewLifecycleOwner) { defaultListPicture ->
             adapter.submitList(defaultListPicture)
@@ -106,7 +105,7 @@ class DetailFragment: Fragment() {
             when(defaultDetailViewState) {
             is DetailViewState.Selected -> {
                 binding.descriptionText.text = defaultDetailViewState.description
-                binding.surfaceValue.text = defaultDetailViewState.surface
+                binding.surfaceValue.text = defaultDetailViewState.surface.toString()
                 binding.nbrRoomValue.text = defaultDetailViewState.numberOfRooms
                 binding.nbrBathroomValue.text = defaultDetailViewState.numberOfBathrooms
                 binding.nbrBedroomValue.text = defaultDetailViewState.numberOfBedRooms
@@ -130,6 +129,4 @@ class DetailFragment: Fragment() {
             }
         }
     }
-
-
 }

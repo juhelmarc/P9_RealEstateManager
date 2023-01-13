@@ -1,13 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.list
 
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
-import androidx.room.ForeignKey
-import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
+import androidx.lifecycle.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +21,7 @@ class ListViewModel  @Inject constructor(
         properties.map {
             ListViewState(
                 it.type,
-                it.district,
+                it.town,
                 it.price,
                 it.mainPicture,
                 it.id,
@@ -33,6 +29,24 @@ class ListViewModel  @Inject constructor(
             )
         }
     }.asLiveData()
+
+
+
+    val propertyListFilterLiveData: LiveData<List<ListViewState>> =
+        propertyRepository.queryFilterLiveData.switchMap { query ->
+            propertyRepository.getAllPropertyFilter(query).map { listFilterProperty ->
+                listFilterProperty.map {
+                    ListViewState(
+                        it.type,
+                        it.town,
+                        it.price,
+                        it.mainPicture,
+                        it.id,
+                        it.agentName,
+                    )
+                }
+            }.asLiveData()
+        }
 
 
     fun onItemClicked(id: Long) {

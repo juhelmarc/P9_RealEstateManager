@@ -5,10 +5,14 @@ import android.content.Context
 import androidx.room.OnConflictStrategy
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.openclassrooms.realestatemanager.data.dao.RoomDao
+import com.openclassrooms.realestatemanager.data.Converters
+import com.openclassrooms.realestatemanager.data.dao.*
 import com.openclassrooms.realestatemanager.data.database.AppDatabase
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
+
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import dagger.Module
 import dagger.Provides
@@ -31,7 +35,9 @@ object DoaModule {
     @Singleton
     fun provideDatabase(
         @ApplicationContext appContext: Context,
-        roomDaoProvider: Provider<RoomDao>
+        roomDaoProviderAgent: Provider<AgentDao>,
+        roomDaoProviderPicture: Provider<PictureDao>,
+        roomDaoProviderProperty: Provider<PropertyDao>,
     ): AppDatabase {
         return Room.databaseBuilder(appContext,
             AppDatabase::class.java,
@@ -41,21 +47,37 @@ object DoaModule {
                     super.onCreate(db)
 
                     CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
-                        val roomDao = roomDaoProvider.get()
+                        val agentDao = roomDaoProviderAgent.get()
 
-                        roomDao.insertAgent(AgentEntity(name = "007"))
-                        roomDao.insertAgent(AgentEntity(name = "Chuck Norris"))
-                        roomDao.insertAgent(AgentEntity(name = "Agent Smith"))
+                        agentDao.insertAgent(AgentEntity(name = "007"))
+                        agentDao.insertAgent(AgentEntity(name = "Chuck Norris"))
+                        agentDao.insertAgent(AgentEntity(name = "Agent Smith"))
 
                     }
                 }
             })
             .build()
     }
+//    @Provides
+//    fun provideRoomDao(database: AppDatabase): RoomDao {
+//        return database.roomDao()
+//    }
     @Provides
-    fun provideRoomDao(database: AppDatabase): RoomDao {
-        return database.roomDao()
+    fun provideAgentDao(database: AppDatabase): AgentDao {
+        return database.agentDao()
     }
+    @Provides
+    fun providePictureDao(database: AppDatabase): PictureDao {
+        return database.pictureDao()
+    }
+    @Provides
+    fun providePropertyDao(database: AppDatabase): PropertyDao {
+        return database.propertyDao()
+    }
+//    @Provides
+//    fun providePoiDao(database: AppDatabase): PoiDao {
+//        return database.poiDao()
+//    }
 
 
 

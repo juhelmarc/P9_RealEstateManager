@@ -5,4 +5,17 @@
     <string name="number_of_bedrooms">Number of bedrooms</string>
     <string name="location">Location</string>
     <string name="message_error_form">Is mandatory</string>
+
+    //POI
+    <string name="poi_school">School</string>
+    <string name="poi_transportation_hubs">Transportation hubs</string>
+    <string name="poi_shopping_centers">Shopping centers</string>
+    <string name="poi_grocery_stores">Grocery stores</string>
+    <string name="poi_restaurants">Restaurants</string>
+    <string name="poi_cafes">Cafes</string>
+    <string name="poi_green_spaces">Green spaces</string>
+    <string name="poi_entertainment_venues">Entertainment venues</string>
+    <string name="poi_cultural_attractions">Cultural attractions</string>
+    <string name="poi_sports_facilities">Sports facilities</string>
+    <string name="poi_medical_facilities">Medical facilities</string>
 </resources>

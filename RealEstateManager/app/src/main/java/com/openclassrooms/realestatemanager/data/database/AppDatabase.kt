@@ -1,29 +1,27 @@
 package com.openclassrooms.realestatemanager.data.database
 
-import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.openclassrooms.realestatemanager.data.dao.RoomDao
+import androidx.room.*
+import com.openclassrooms.realestatemanager.data.Converters
+import com.openclassrooms.realestatemanager.data.dao.*
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 
 @Database(
     entities = [
         PropertyEntity::class,
-        PropertyPicturesEntity::class,
-        AgentEntity::class
+        PropertyPictureEntity::class,
+        AgentEntity::class,
+//        PoiEntity::class
     ],
     version = 1,
     exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
 
-    abstract fun roomDao(): RoomDao
+    abstract fun agentDao(): AgentDao
+    abstract fun pictureDao(): PictureDao
+    abstract fun propertyDao(): PropertyDao
 
 //    companion object {
 //        @Volatile

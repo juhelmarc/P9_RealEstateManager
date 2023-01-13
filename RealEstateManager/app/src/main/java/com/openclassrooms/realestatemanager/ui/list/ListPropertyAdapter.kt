@@ -29,7 +29,7 @@ class ListPropertyAdapter (
 
         fun bind(item: ListViewState, onItemClicked: (id: Long) -> Unit) {
             binding.propertyType.text = item.type
-            binding.propertyTown.text = item.district
+            binding.propertyTown.text = item.town
             binding.propertyPrice.text = "$${item.price}"
             binding.propertyPicture.load(item.mainPicture)
             binding.realEstateAgent.text = item.agentName

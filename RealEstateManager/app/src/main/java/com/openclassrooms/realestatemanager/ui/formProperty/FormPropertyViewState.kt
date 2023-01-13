@@ -1,20 +1,17 @@
-package com.openclassrooms.realestatemanager.ui.addProperty
+package com.openclassrooms.realestatemanager.ui.formProperty
 
-import com.openclassrooms.realestatemanager.data.model.FormError
-import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicturesEntity
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
+
 
 data class FormPropertyViewState(
     val id: Long,
-    val photoList: List<PropertyPicturesEntity>?,
-    val agentList: List<AgentEntity?>,
-    val agentId: Long?,
-    val agentName: String?,
+    val listPicture: List<PropertyPictureEntity>,
+    val agentId: Long,
+    val agentName: String,
     val type: String?,
-    val district: String?,
-    val price: String?,
+    val price: Int?,
     val description: String?,
-    val surface: String?,
+    val surface: Int?,
     val numberOfRooms: String?,
     val numberOfBathrooms: String?,
     val numberOfBedrooms: String?,
@@ -26,14 +23,20 @@ data class FormPropertyViewState(
     val isAvailable: Boolean,
     val entryDate: String?,
     val dateOfSale: String?,
+    val listPoiSelectedOrNot: List<ChipPoiViewState>,
 
     val typeError: String?,
     val agentError: String?,
     val postalCodeError: String?,
-    val districtError: String?,
     val addressError: String?,
     val townError: String?,
     val entryDateError: String?,
     val dateOfSaleError: String?
+) {
+    data class ChipPoiViewState(
+        val poiId: Int,
+        val isSelected: Boolean
+    )
+}
 
-)
+

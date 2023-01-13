@@ -36,7 +36,7 @@ class ListFragment : Fragment() {
         }
         recyclerView.adapter = adapter
 
-        viewModel.propertyListLiveData.observe(viewLifecycleOwner){
+        viewModel.propertyListFilterLiveData.observe(viewLifecycleOwner){
             adapter.submitList(it)
         }
 

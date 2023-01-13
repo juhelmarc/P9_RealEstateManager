@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="initial_slider_values_price">
+        <item>50000.0</item>
+        <item>2000000.0</item>
+    </array>
+
+    <array name="initial_slider_values_surface">
+        <item>50.0</item>
+        <item>2000.0</item>
+    </array>
+</resources>

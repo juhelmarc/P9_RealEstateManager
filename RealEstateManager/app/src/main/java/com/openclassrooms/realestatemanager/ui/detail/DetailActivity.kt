@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
-import com.openclassrooms.realestatemanager.ui.addProperty.FormPropertyActivity
-import com.openclassrooms.realestatemanager.ui.main.MainViewModel
+import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,14 +37,10 @@ class DetailActivity: AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
                 R.id.edit_current_property_detail -> {
                     startActivity(Intent(this@DetailActivity, FormPropertyActivity::class.java))
-                    viewModel.propertyToUpdateLiveData.observe(this@DetailActivity) {
-                        viewModel.setFormPropertyIdUpdate(it.id)
-                    }
                     true
                 }
                 else -> false
             }
         })
     }
-
 }
