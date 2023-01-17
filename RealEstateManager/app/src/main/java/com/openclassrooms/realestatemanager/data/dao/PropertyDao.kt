@@ -29,7 +29,7 @@ interface PropertyDao {
     @Query("SELECT DISTINCT type FROM PropertyEntity")
     fun getListType(): Flow<List<String>>
 
-    @Query("SELECT DISTINCT type FROM PropertyEntity ")
+    @Query("SELECT DISTINCT town FROM PropertyEntity ")
     fun getListTown(): Flow<List<String>>
 
 }

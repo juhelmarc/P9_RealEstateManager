@@ -1,79 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    >
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_text"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:text="FILTER"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:padding="@dimen/padding_detail">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_price_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:text="Filter by price"
-        android:textColor="@color/black"
-        android:layout_marginStart="@dimen/standard_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_text" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/filter_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="FILTER"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/filter_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:valueFrom="0"
-        android:valueTo="2000000"
-        app:layout_constraintTop_toBottomOf="@id/filter_price_text"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="rangeSliderPrice"
-        app:values="@array/initial_slider_values_price"
-         />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/filter_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="Filter by price"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_text" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_surface_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:text="Filter by surface"
-        android:textColor="@color/black"
-        android:layout_marginStart="@dimen/standard_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_price" />
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/filter_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:valueFrom="0"
+            android:valueTo="2000000"
+            app:layout_constraintTop_toBottomOf="@id/filter_price_text"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="rangeSliderPrice"
+            app:values="@array/initial_slider_values_price"
+             />
 
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/filter_surface"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:valueFrom="0"
-        android:valueTo="2000"
-        app:layout_constraintTop_toBottomOf="@id/filter_surface_text"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="rangeSliderPrice"
-        app:values="@array/initial_slider_values_surface"
-        />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/filter_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FILTER"
-        android:layout_marginTop="@dimen/standard_margin"
-        app:layout_constraintTop_toBottomOf="@+id/filter_surface"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/filter_surface_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="Filter by surface"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/standard_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_price" />
 
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/filter_surface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:valueFrom="0"
+            android:valueTo="2000"
+            app:layout_constraintTop_toBottomOf="@id/filter_surface_text"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="rangeSliderPrice"
+            app:values="@array/initial_slider_values_surface"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_agent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/filter_surface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/margin_top_add"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:hint="Chose an agent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            >
+            <AutoCompleteTextView
+                android:id="@+id/agent_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_view_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:layout_constraintTop_toBottomOf="@id/filter_agent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/margin_top_add"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:background="@android:drawable/editbox_background"
+            android:drawableRight="@android:drawable/arrow_down_float"
+            android:drawablePadding="16dp"
+            android:hint="Select type"
+            android:padding="12dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_view_town"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:layout_constraintTop_toBottomOf="@id/text_view_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/margin_top_add"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:background="@android:drawable/editbox_background"
+            android:drawableRight="@android:drawable/arrow_down_float"
+            android:drawablePadding="16dp"
+            android:hint="Select town"
+            android:padding="12dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/number_of_property_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_town"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:textColor="@color/black"
+            tools:text="Property found : 4"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FILTER"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@+id/number_of_property_found"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

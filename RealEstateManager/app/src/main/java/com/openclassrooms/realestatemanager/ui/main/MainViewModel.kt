@@ -21,6 +21,8 @@ class MainViewModel @Inject constructor(
 
     val navigateSingleLiveEvent = SingleLiveEvent<MainViewAction>()
 
+
+
     init {
         navigateSingleLiveEvent.addSource(currentPropertyRepository.currentIdLiveData) {
             if(!isTablet) {
@@ -38,7 +40,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setQueryFilter(query: String, isFiltered: Boolean) {
-        propertyRepository.setQueryFilterLiveData(query, isFiltered)
+         propertyRepository.setQueryFilterLiveData(query, isFiltered)
     }
 
     val currentIdLiveData: LiveData<Long> =

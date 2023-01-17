@@ -30,8 +30,6 @@ class ListViewModel  @Inject constructor(
         }
     }.asLiveData()
 
-
-
     val propertyListFilterLiveData: LiveData<List<ListViewState>> =
         propertyRepository.queryFilterLiveData.switchMap { query ->
             propertyRepository.getAllPropertyFilter(query).map { listFilterProperty ->
@@ -48,13 +46,9 @@ class ListViewModel  @Inject constructor(
             }.asLiveData()
         }
 
-
     fun onItemClicked(id: Long) {
         currentPropertyRepository.setCurrentId(id)
     }
 
-//    fun onItemClickedFlow(id: String) {
-//        currentPropertyRepository.setCurrentIdFlow(id)
-//    }
 
 }

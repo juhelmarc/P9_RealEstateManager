@@ -9,6 +9,7 @@ import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,17 +48,6 @@ class PropertyRepository @Inject constructor(
         return agentDao.getAllAgent()
     }
 
-//    @WorkerThread
-//    suspend fun insertPoi(poi: PoiEntity) {
-//        poiDao.insertPoi(poi)
-//    }
-
-//    fun getPoiOfThisProperty(propertyId: Long): Flow<PoiEntity> {
-//       return poiDao.getPoi(propertyId)
-//    }
-//    suspend fun deletePoi(poi: PoiEntity) {
-//        poiDao.deletePoi(poi)
-//    }
 
     private val formPropertyIdMutableLiveData = MutableLiveData<Long>()
 
@@ -67,19 +57,17 @@ class PropertyRepository @Inject constructor(
         formPropertyIdMutableLiveData.value = id
     }
 
-    private val queryMutableLiveData = MutableLiveData<String>()
+    private val queryMutableLiveData = MutableLiveData<String>("SELECT * FROM PropertyEntity ORDER BY id ASC")
 
     val queryFilterLiveData: LiveData<String> = queryMutableLiveData
-    //Rassemblé le set et l'écoute de la requête
-    fun setQueryFilterLiveData(query: String, isFiltered: Boolean): Flow<List<PropertyEntity>> {
-        if(isFiltered) {
-           return getAllPropertyFilter(query)
-//            queryMutableLiveData.value = query
-        } else {
-          return  getAllProperty
-//            queryMutableLiveData.value = "SELECT * FROM PropertyEntity ORDER BY id ASC"
-        }
 
+    //Rassemblé le set et l'écoute de la requête
+    fun setQueryFilterLiveData(query: String, isFiltered: Boolean) {
+        if(isFiltered) {
+            queryMutableLiveData.value = query
+        } else {
+            queryMutableLiveData.value = "SELECT * FROM PropertyEntity ORDER BY id ASC"
+        }
     }
 
     fun getListIdProperty() : LiveData<List<Int>> {

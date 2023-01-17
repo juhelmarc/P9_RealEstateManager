@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
         //créer un model avec les filtres, la vue peux retourner une custom request (string) (sur room définir des custom request)
         //qui retourne un résultat et la vue mainActivité récupère la custom request la lance dans room
         //SupportSQLiteQuery
-        viewModel.setQueryFilter("", false)
+
+
+
         //Si l'activité n'est pas en pause -> ajout du listFragment dans le frameLayout
         if(saveInstanceState == null){
             supportFragmentManager.beginTransaction()
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                     val data = result.data!!.getStringExtra("data")
                     if(data != null) {
                         viewModel.setQueryFilter(data, true)
+
                     }
                 }
             }
