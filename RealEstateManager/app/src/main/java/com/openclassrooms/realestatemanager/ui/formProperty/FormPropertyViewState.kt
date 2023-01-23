@@ -31,7 +31,8 @@ data class FormPropertyViewState(
     val addressError: String?,
     val townError: String?,
     val entryDateError: String?,
-    val dateOfSaleError: String?
+    val dateOfSaleError: String?,
+    val pictureError: String?
 ) {
     data class ChipPoiViewState(
         val poiId: Int,

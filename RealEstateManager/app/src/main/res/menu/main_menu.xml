@@ -17,6 +17,10 @@
         android:title="search"
         app:showAsAction="collapseActionView|ifRoom"
         />
-
+    <item
+        android:id="@+id/search_off"
+        android:icon="@drawable/ic_baseline_search_off_24"
+        android:title="search_off"
+        app:showAsAction="collapseActionView|ifRoom"/>
 
 </menu>

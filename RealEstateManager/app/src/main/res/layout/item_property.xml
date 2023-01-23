@@ -78,12 +78,25 @@
             android:ellipsize="end"
             android:padding="2dp"
             android:singleLine="true"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/property_town"
+            app:layout_constraintTop_toTopOf="@+id/property_type"
             android:textColor="@color/green"
             android:textStyle="bold"
             tools:text="Marc" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:padding="2dp"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/property_price"
+            android:textColor="@color/green"
+            android:textStyle="bold"
+            tools:text="Available" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

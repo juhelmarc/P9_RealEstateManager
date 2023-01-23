@@ -16,22 +16,9 @@ class ListViewModel  @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val currentPropertyRepository: CurrentPropertyRepository
 ) : ViewModel(){
-    //Nous récupérons la liste de Property dans notre fakePropertyRepository et nous la transformons en liste de ListViewState object
-    val propertyListLiveData: LiveData<List<ListViewState>> = propertyRepository.getAllProperty.map { properties ->
-        properties.map {
-            ListViewState(
-                it.type,
-                it.town,
-                it.price,
-                it.mainPicture,
-                it.id,
-                it.agentName,
-            )
-        }
-    }.asLiveData()
 
     val propertyListFilterLiveData: LiveData<List<ListViewState>> =
-        propertyRepository.queryFilterLiveData.switchMap { query ->
+        propertyRepository.queryFilterListFragmentLiveData.switchMap { query ->
             propertyRepository.getAllPropertyFilter(query).map { listFilterProperty ->
                 listFilterProperty.map {
                     ListViewState(
@@ -41,6 +28,8 @@ class ListViewModel  @Inject constructor(
                         it.mainPicture,
                         it.id,
                         it.agentName,
+                        it.entryDate,
+                        it.dateOfSale
                     )
                 }
             }.asLiveData()
@@ -48,6 +37,7 @@ class ListViewModel  @Inject constructor(
 
     fun onItemClicked(id: Long) {
         currentPropertyRepository.setCurrentId(id)
+        propertyRepository.setCurrentPropertyId(id)
     }
 
 

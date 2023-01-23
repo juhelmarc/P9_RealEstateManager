@@ -1,14 +1,11 @@
 package com.openclassrooms.realestatemanager.ui.main
 
 import androidx.lifecycle.*
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 
 import com.openclassrooms.realestatemanager.utils.SingleLiveEvent
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,16 +32,19 @@ class MainViewModel @Inject constructor(
         this.isTablet = isTablet
     }
 
-    fun setPropertyIdAdd() {
-        propertyRepository.setCurrentPropertyId(0L)
+    fun setIsAnUpdateProperty(isAnUpdate: Boolean) {
+        propertyRepository.setIsAnUpdateProperty(isAnUpdate)
     }
 
-    fun setQueryFilter(query: String, isFiltered: Boolean) {
-         propertyRepository.setQueryFilterLiveData(query, isFiltered)
+    fun deleteCurrentFilter() {
+        propertyRepository.deleteCurrentFilter()
     }
 
     val currentIdLiveData: LiveData<Long> =
         currentPropertyRepository.currentIdLiveData
 
+    fun setCurrentPropertyId(id: Long) {
+        propertyRepository.setCurrentPropertyId(id)
+    }
 
 }

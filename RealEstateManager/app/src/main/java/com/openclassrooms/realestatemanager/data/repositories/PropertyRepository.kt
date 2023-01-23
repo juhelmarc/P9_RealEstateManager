@@ -3,8 +3,10 @@ package com.openclassrooms.realestatemanager.data.repositories
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.openclassrooms.realestatemanager.data.dao.*
+import com.openclassrooms.realestatemanager.data.models.CurrentFilterValue
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
@@ -43,11 +45,9 @@ class PropertyRepository @Inject constructor(
        return pictureDao.getAllPropertyPictures(propertyId)
     }
 
-
     fun getAllAgent(): Flow<List<AgentEntity>> {
         return agentDao.getAllAgent()
     }
-
 
     private val formPropertyIdMutableLiveData = MutableLiveData<Long>()
 
@@ -57,17 +57,50 @@ class PropertyRepository @Inject constructor(
         formPropertyIdMutableLiveData.value = id
     }
 
-    private val queryMutableLiveData = MutableLiveData<String>("SELECT * FROM PropertyEntity ORDER BY id ASC")
+    private val isAnUpdatePropertyMutableStateLiveData = MutableLiveData<Boolean>()
 
-    val queryFilterLiveData: LiveData<String> = queryMutableLiveData
+    val isAnUpdatePropertyLiveData: LiveData<Boolean> = isAnUpdatePropertyMutableStateLiveData
 
-    //Rassemblé le set et l'écoute de la requête
-    fun setQueryFilterLiveData(query: String, isFiltered: Boolean) {
-        if(isFiltered) {
-            queryMutableLiveData.value = query
-        } else {
-            queryMutableLiveData.value = "SELECT * FROM PropertyEntity ORDER BY id ASC"
-        }
+    fun setIsAnUpdateProperty(isAnUpdate: Boolean) {
+        isAnUpdatePropertyMutableStateLiveData.value = isAnUpdate
+    }
+
+    private val initialQuery = "SELECT * FROM PropertyEntity ORDER BY id ASC"
+
+    private val queryFilterMutableLiveData = MutableLiveData<String>(initialQuery)
+
+    val queryFilterLiveData: LiveData<String> = queryFilterMutableLiveData
+
+    private val queryFilterListFragmentMutableLiveData = MutableLiveData<String>(initialQuery)
+
+    val queryFilterListFragmentLiveData: LiveData<String> = queryFilterListFragmentMutableLiveData
+
+    fun registerFilterQueryWhenSubmitButtonClicked(query: String) {
+        queryFilterListFragmentMutableLiveData.value = query
+    }
+
+    private val initialFilter = CurrentFilterValue(
+        minPriceSelected = null,
+        maxPriceSelected = null,
+        minSurfaceSelected = null,
+        maxSurfaceSelected = null,
+        agentNameSelected = "",
+        listOfTypeSelected = listOf(),
+        listOfTownSelected = listOf()
+    )
+
+    private val currentFilterValueMutableLiveData = MutableStateFlow<CurrentFilterValue>(initialFilter)
+
+    val currentFilterValue: Flow<CurrentFilterValue> = currentFilterValueMutableLiveData
+
+    fun deleteCurrentFilter() {
+        currentFilterValueMutableLiveData.value = initialFilter
+        queryFilterMutableLiveData.value = initialQuery
+        queryFilterListFragmentMutableLiveData.value = initialQuery
+    }
+    fun registerCurrentFilterValueAndQuery(query: String, value: CurrentFilterValue) {
+        queryFilterMutableLiveData.value = query
+        currentFilterValueMutableLiveData.value = value
     }
 
     fun getListIdProperty() : LiveData<List<Int>> {

@@ -25,57 +25,57 @@ class FormPropertyViewModel @Inject constructor(
 
     val initialViewStateLiveData: LiveData<FormPropertyViewState> =
         propertyRepository.currentIdLiveData.switchMap { id ->
-            if(id != 0L) {
-                combine(
-                    propertyRepository.getPropertyByIdFlow(id),
-                    propertyRepository.getAllPicturesOfThisProperty(id),
-//                    propertyRepository.getPoiOfThisProperty(id),
-                ) {
-                        it, listPicture ->
-                    val mainPicture: String = if(listPicture.isNotEmpty()) listPicture[0].url else ""
-//                    val poiIdListOfThisProperty: List<Int> = listPoiOfThisProperty.poiSelected
-                    val poiIdListOfThisProperty: List<Int> = it.poiSelected
-
-                    val listPoiSelectedOrNot: List<FormPropertyViewState.ChipPoiViewState> =
-                        PoiList.values().map { poi ->
-                            FormPropertyViewState.ChipPoiViewState(
-                                poiId = poi.poiId,
-                                isSelected = poiIdListOfThisProperty.contains(poi.poiId)
-                            )
-                        }
-                    FormPropertyViewState(
-                        it.id,
-                        listPicture,
-                        it.agentId,
-                        it.agentName,
-                        it.type,
-                        it.price,
-                        it.description,
-                        it.surface,
-                        it.numberOfRooms,
-                        it.numberOfBathrooms,
-                        it.numberOfBedrooms,
-                        it.town,
-                        it.address,
-                        it.postalCode,
-                        it.state,
-                        mainPicture,
-                        it.isAvailable,
-                        it.entryDate,
-                        it.dateOfSale,
-                        listPoiSelectedOrNot,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                }.asLiveData()
-            } else {
-                MutableLiveData<FormPropertyViewState>().apply {
-                    value = viewStateEmpty
+            propertyRepository.isAnUpdatePropertyLiveData.switchMap { isAnUpdate ->
+                if (isAnUpdate) {
+                    combine(
+                        propertyRepository.getPropertyByIdFlow(id),
+                        propertyRepository.getAllPicturesOfThisProperty(id),
+                    ) { it, listPicture ->
+                        val mainPicture: String =
+                            if (listPicture.isNotEmpty()) listPicture[0].url else ""
+                        val poiIdListOfThisProperty: List<Int> = it.poiSelected
+                        val listPoiSelectedOrNot: List<FormPropertyViewState.ChipPoiViewState> =
+                            PoiList.values().map { poi ->
+                                FormPropertyViewState.ChipPoiViewState(
+                                    poiId = poi.poiId,
+                                    isSelected = poiIdListOfThisProperty.contains(poi.poiId)
+                                )
+                            }
+                        FormPropertyViewState(
+                            it.id,
+                            listPicture,
+                            it.agentId,
+                            it.agentName,
+                            it.type,
+                            it.price,
+                            it.description,
+                            it.surface,
+                            it.numberOfRooms,
+                            it.numberOfBathrooms,
+                            it.numberOfBedrooms,
+                            it.town,
+                            it.address,
+                            it.postalCode,
+                            it.state,
+                            mainPicture,
+                            it.isAvailable,
+                            it.entryDate,
+                            it.dateOfSale,
+                            listPoiSelectedOrNot,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        )
+                    }.asLiveData()
+                } else {
+                    MutableLiveData<FormPropertyViewState>().apply {
+                        value = viewStateEmpty
+                    }
                 }
             }
         }
@@ -106,6 +106,7 @@ class FormPropertyViewModel @Inject constructor(
                 isSelected = false
             )
         },
+        null,
         null,
         null,
         null,
@@ -203,25 +204,32 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(dateOfSaleError = null)
             )
         }
+        if(getPropertyViewState().listPicture.isEmpty()) {
+            updatePropertyViewState(
+                getPropertyViewState().copy(pictureError = "You need add one picture")
+            )
+        } else {
+            updatePropertyViewState(
+                getPropertyViewState().copy(pictureError = null)
+            )
+        }
         return getPropertyViewState().agentError == null &&
                 getPropertyViewState().typeError == null &&
                 getPropertyViewState().postalCodeError == null &&
                 getPropertyViewState().addressError == null &&
                 getPropertyViewState().townError == null &&
                 getPropertyViewState().entryDateError == null &&
-                getPropertyViewState().dateOfSaleError == null
+                getPropertyViewState().dateOfSaleError == null &&
+                getPropertyViewState().pictureError == null
     }
 
     private fun updatePropertyEntity(formPropertyViewState: FormPropertyViewState) = viewModelScope.launch {
-        val mainPicture = if(formPropertyViewState.listPicture.isEmpty()) null else formPropertyViewState.listPicture[0].url
-
         val listPoiSelected = mutableListOf<Int>()
         formPropertyViewState.listPoiSelectedOrNot.forEach { poi ->
             if(poi.isSelected) {
                 listPoiSelected.add(poi.poiId)
             }
         }
-
         val propertyId =
             propertyRepository.insertProperty(PropertyEntity(
                 id = formPropertyViewState.id,
@@ -238,19 +246,16 @@ class FormPropertyViewModel @Inject constructor(
                 address = formPropertyViewState.address,
                 postalCode = formPropertyViewState.postalCode,
                 state = formPropertyViewState.state,
-                mainPicture = mainPicture,
+                mainPicture = formPropertyViewState.listPicture[0].url,
                 isAvailable = formPropertyViewState.isAvailable,
                 entryDate = formPropertyViewState.entryDate,
                 dateOfSale = formPropertyViewState.dateOfSale,
                 poiSelected = listPoiSelected
             ))
-
         formPropertyViewState.listPicture.forEach { picture ->
             val pictureToInsert = picture.copy(propertyId = propertyId)
             propertyRepository.insertPicture(pictureToInsert)
         }
-
-
     }
 
     fun updatePoi(poiId: Int, isChecked: Boolean) {
@@ -265,7 +270,7 @@ class FormPropertyViewModel @Inject constructor(
         )
         updatePropertyViewState(getPropertyViewState().copy(
             listPoiSelectedOrNot = listPoi
-        )
+            )
         )
     }
 
@@ -306,7 +311,6 @@ class FormPropertyViewModel @Inject constructor(
                 )
             )
         }
-
     }
     fun updateRoom(nbrRoom: String?) {
         updatePropertyViewState(
@@ -384,7 +388,6 @@ class FormPropertyViewModel @Inject constructor(
                 )
             )
         }
-
     }
     fun updateTown(town: String?) {
         updatePropertyViewState(

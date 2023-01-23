@@ -16,6 +16,8 @@ import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
 import com.openclassrooms.realestatemanager.ui.detailslider.DetailSliderActivity
 
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class DetailFragment: Fragment() {
@@ -28,14 +30,11 @@ class DetailFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
-//        defaultBinding()
-//        configureListPictureAdapterDefault()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configureListPictureAdapter()
         //POIs
         val recyclerViewChip: RecyclerView = binding.poiListDetail
         recyclerViewChip.layoutManager = FlexboxLayoutManager(requireContext())
@@ -51,21 +50,21 @@ class DetailFragment: Fragment() {
             startActivity(Intent(context, DetailSliderActivity :: class.java))
         }
 
-        viewModel.detailLiveData.observe(viewLifecycleOwner) { property ->
-            when(property) {
+        viewModel.detailLiveData.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
                 is DetailViewState.Selected -> {
-                    binding.descriptionText.text = property.description
-                    binding.surfaceValue.text = property.surface.toString()
-                    binding.nbrRoomValue.text = property.numberOfRooms
-                    binding.nbrBathroomValue.text = property.numberOfBathrooms
-                    binding.nbrBedroomValue.text = property.numberOfBedRooms
-                    binding.addressValue.text = property.address
-                    binding.townValue.text = property.town
-                    binding.postalCodeValue.text = property.postalCode
-                    binding.stateValue.text = property.state
+                    binding.descriptionText.text = viewState.description
+                    binding.surfaceValue.text = viewState.surface.toString()
+                    binding.nbrRoomValue.text = viewState.numberOfRooms
+                    binding.nbrBathroomValue.text = viewState.numberOfBathrooms
+                    binding.nbrBedroomValue.text = viewState.numberOfBedRooms
+                    binding.addressValue.text = viewState.address
+                    binding.townValue.text = viewState.town
+                    binding.postalCodeValue.text = viewState.postalCode
+                    binding.stateValue.text = viewState.state
                     binding.staticMap.load(
                         "https://maps.googleapis.com/maps/api/staticmap?" +
-                                "&markers=" + property.town + ", " + property.address + ", " + property.postalCode +
+                                "&markers=" + viewState.town + ", " + viewState.address + ", " + viewState.postalCode +
                                 "&zoom=19" +
                                 "&size=400x400" +
                                 "&maptype=roadmap" +
@@ -73,13 +72,63 @@ class DetailFragment: Fragment() {
                     )
                     binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
                     binding.emptyListProperty.visibility = View.INVISIBLE
-                    chipAdapter.submitList(property.poiSelected)
+                    if(viewState.entryDate != null && viewState.entryDate != "") {
+                        binding.entryDateValue.text = "Entry date : ${formatDate(viewState.entryDate.toLong())}"
+                    } else {
+                        binding.entryDateValue.text = ""
+                    }
+                    if(viewState.sellingDate != null && viewState.sellingDate != "") {
+                        binding.sellingDateValue.text = "Entry date : ${formatDate(viewState.sellingDate.toLong())}"
+                    } else {
+                        binding.sellingDateValue.text = ""
+                    }
+                    adapter.submitList(viewState.listPicture)
+                    chipAdapter.submitList(viewState.poiSelected)
                 }
                 is DetailViewState.Empty -> {
                     binding.emptyListProperty.visibility = View.VISIBLE
+                    binding.emptyListProperty.text = "TEST"
+                }
+                is DetailViewState.NotSelected -> {
+                    binding.descriptionText.text = viewState.description
+                    binding.surfaceValue.text = viewState.surface.toString()
+                    binding.nbrRoomValue.text = viewState.numberOfRooms
+                    binding.nbrBathroomValue.text = viewState.numberOfBathrooms
+                    binding.nbrBedroomValue.text = viewState.numberOfBedRooms
+                    binding.addressValue.text = viewState.address
+                    binding.townValue.text = viewState.town
+                    binding.postalCodeValue.text = viewState.postalCode
+                    binding.stateValue.text = viewState.state
+                    binding.staticMap.load(
+                        "https://maps.googleapis.com/maps/api/staticmap?" +
+                                "&markers=" + viewState.town + ", " + viewState.address + ", " + viewState.postalCode +
+                                "&zoom=19" +
+                                "&size=400x400" +
+                                "&maptype=roadmap" +
+                                "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo"
+                    )
+                    binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
+                    binding.emptyListProperty.visibility = View.INVISIBLE
+                    if(viewState.entryDate != null && viewState.entryDate != "") {
+                        binding.entryDateValue.text = "Entry date : ${formatDate(viewState.entryDate.toLong())}"
+                    } else {
+                        binding.entryDateValue.text = ""
+                    }
+                    if(viewState.sellingDate != null && viewState.sellingDate != "") {
+                        binding.sellingDateValue.text = "Entry date : ${formatDate(viewState.sellingDate.toLong())}"
+                    } else {
+                        binding.sellingDateValue.text = ""
+                    }
+                    adapter.submitList(viewState.listPicture)
+                    chipAdapter.submitList(viewState.poiSelected)
                 }
             }
         }
+    }
+    private fun formatDate(dateMilli: Long): String {
+        val format: String = "MMM dd.yyyy"
+        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat(format, Locale.US)
+        return simpleDateFormat.format(dateMilli)
     }
 
     override fun onDestroyView() {
@@ -87,46 +136,35 @@ class DetailFragment: Fragment() {
         _binding = null
     }
 
-    private fun configureListPictureAdapter() {
-        viewModel.listPictureLiveData.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-    }
-    //TODO créer un DetailViewState.NotSelected -> pour afficher le detail de l'id = 1
 
-    private fun configureListPictureAdapterDefault() {
-        viewModel.listPictureLiveDataDefault.observe(viewLifecycleOwner) { defaultListPicture ->
-            adapter.submitList(defaultListPicture)
-        }
-    }
 
-    private fun defaultBinding() {
-        viewModel.detailLiveDataDefault.observe(viewLifecycleOwner) { defaultDetailViewState ->
-            when(defaultDetailViewState) {
-            is DetailViewState.Selected -> {
-                binding.descriptionText.text = defaultDetailViewState.description
-                binding.surfaceValue.text = defaultDetailViewState.surface.toString()
-                binding.nbrRoomValue.text = defaultDetailViewState.numberOfRooms
-                binding.nbrBathroomValue.text = defaultDetailViewState.numberOfBathrooms
-                binding.nbrBedroomValue.text = defaultDetailViewState.numberOfBedRooms
-                binding.addressValue.text = defaultDetailViewState.address
-                binding.townValue.text = defaultDetailViewState.town
-                binding.postalCodeValue.text = defaultDetailViewState.postalCode
-                binding.stateValue.text = defaultDetailViewState.state
-                binding.staticMap.load(
-                    "https://maps.googleapis.com/maps/api/staticmap?" +
-                            "&markers=" + defaultDetailViewState.town + ", " + defaultDetailViewState.address + ", " + defaultDetailViewState.postalCode.toString() +
-                            "&zoom=19" +
-                            "&size=400x400" +
-                            "&maptype=roadmap" +
-                            "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo"
-                )
-                binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
-            }
-                is DetailViewState.Empty -> {
-
-                }
-            }
-        }
-    }
+//    private fun defaultBinding() {
+//        viewModel.detailLiveDataDefault.observe(viewLifecycleOwner) { defaultDetailViewState ->
+//            when(defaultDetailViewState) {
+//            is DetailViewState.Selected -> {
+//                binding.descriptionText.text = defaultDetailViewState.description
+//                binding.surfaceValue.text = defaultDetailViewState.surface.toString()
+//                binding.nbrRoomValue.text = defaultDetailViewState.numberOfRooms
+//                binding.nbrBathroomValue.text = defaultDetailViewState.numberOfBathrooms
+//                binding.nbrBedroomValue.text = defaultDetailViewState.numberOfBedRooms
+//                binding.addressValue.text = defaultDetailViewState.address
+//                binding.townValue.text = defaultDetailViewState.town
+//                binding.postalCodeValue.text = defaultDetailViewState.postalCode
+//                binding.stateValue.text = defaultDetailViewState.state
+//                binding.staticMap.load(
+//                    "https://maps.googleapis.com/maps/api/staticmap?" +
+//                            "&markers=" + defaultDetailViewState.town + ", " + defaultDetailViewState.address + ", " + defaultDetailViewState.postalCode.toString() +
+//                            "&zoom=19" +
+//                            "&size=400x400" +
+//                            "&maptype=roadmap" +
+//                            "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo"
+//                )
+//                binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
+//            }
+//                is DetailViewState.Empty -> {
+//
+//                }
+//            }
+//        }
+//    }
 }

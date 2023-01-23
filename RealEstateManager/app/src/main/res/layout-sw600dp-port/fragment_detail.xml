@@ -283,6 +283,44 @@
                     android:textSize="@dimen/text_detail"
                     android:textStyle="bold"
                     tools:text="United States" />
+
+                <ImageView
+                    android:id="@+id/date_icon"
+                    android:layout_width="@dimen/icon_detail"
+                    android:layout_height="@dimen/icon_detail"
+                    android:layout_marginStart="@dimen/marge_between_cardview_detail"
+                    android:layout_marginTop="8dp"
+                    android:layout_below="@+id/state_value"
+                    android:layout_toRightOf="@+id/nbr_bathroom_text"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/ic_baseline_calendar_month_24"
+                    />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/entry_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/state_value"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    tools:text="Entry date : 23/01/2023" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/selling_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/entry_date_value"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_detail"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    tools:text="Selling date : 23/01/2023" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 

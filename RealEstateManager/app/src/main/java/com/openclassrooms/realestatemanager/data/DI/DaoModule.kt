@@ -36,8 +36,6 @@ object DoaModule {
     fun provideDatabase(
         @ApplicationContext appContext: Context,
         roomDaoProviderAgent: Provider<AgentDao>,
-        roomDaoProviderPicture: Provider<PictureDao>,
-        roomDaoProviderProperty: Provider<PropertyDao>,
     ): AppDatabase {
         return Room.databaseBuilder(appContext,
             AppDatabase::class.java,
@@ -45,23 +43,16 @@ object DoaModule {
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-
                     CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
                         val agentDao = roomDaoProviderAgent.get()
-
                         agentDao.insertAgent(AgentEntity(name = "007"))
                         agentDao.insertAgent(AgentEntity(name = "Chuck Norris"))
                         agentDao.insertAgent(AgentEntity(name = "Agent Smith"))
-
                     }
                 }
-            })
-            .build()
+            }).build()
     }
-//    @Provides
-//    fun provideRoomDao(database: AppDatabase): RoomDao {
-//        return database.roomDao()
-//    }
+
     @Provides
     fun provideAgentDao(database: AppDatabase): AgentDao {
         return database.agentDao()
@@ -74,10 +65,7 @@ object DoaModule {
     fun providePropertyDao(database: AppDatabase): PropertyDao {
         return database.propertyDao()
     }
-//    @Provides
-//    fun providePoiDao(database: AppDatabase): PoiDao {
-//        return database.poiDao()
-//    }
+
 
 
 

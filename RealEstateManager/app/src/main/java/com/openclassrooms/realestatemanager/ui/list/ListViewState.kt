@@ -7,6 +7,8 @@ data class ListViewState (
     val mainPicture: String?,
     val id : Long,
     val agentName: String,
+    val entryDate: String?,
+    val dateOfSale: String?
 )
 
 

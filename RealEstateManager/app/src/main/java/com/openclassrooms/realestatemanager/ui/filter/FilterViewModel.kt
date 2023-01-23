@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.filter
 
 import androidx.lifecycle.*
+import com.openclassrooms.realestatemanager.data.models.CurrentFilterValue
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,15 +13,16 @@ class FilterViewModel  @Inject constructor(
     private val propertyRepository: PropertyRepository
 ) : ViewModel() {
 
-    val filterViewStateLiveData: LiveData<FilterViewState> =
+    val filterFeatureViewStateLiveData: LiveData<FilterFeatureViewState> =
         propertyRepository.getListIdProperty().switchMap {
             combine(
                 propertyRepository.getMinMaxPriceAndSurface(it),
                 propertyRepository.getAllAgent(),
                 propertyRepository.getListType(),
                 propertyRepository.getListTown(),
-            ) { minMaxPriceSurface, listAgent, listType, listTown ->
-                FilterViewState(
+                propertyRepository.currentFilterValue,
+            ) { minMaxPriceSurface, listAgent, listType, listTown, currentFilterValue ->
+                FilterFeatureViewState(
                     minPrice = minMaxPriceSurface.minPrice,
                     maxPrice = minMaxPriceSurface.maxPrice,
                     minSurface = minMaxPriceSurface.minSurface,
@@ -28,125 +30,157 @@ class FilterViewModel  @Inject constructor(
                     listAgent = listAgent,
                     listOfType = listType,
                     listOfTown = listTown,
+                    minPriceSelected = if(currentFilterValue.minPriceSelected != null && currentFilterValue.minPriceSelected >= minMaxPriceSurface.minPrice)
+                        currentFilterValue.minPriceSelected else  minMaxPriceSurface.minPrice,
+                    maxPriceSelected = if(currentFilterValue.maxPriceSelected != null && currentFilterValue.maxPriceSelected <= minMaxPriceSurface.maxPrice)
+                        currentFilterValue.maxPriceSelected else minMaxPriceSurface.maxPrice,
+                    minSurfaceSelected = if(currentFilterValue.minSurfaceSelected != null && currentFilterValue.minSurfaceSelected >= minMaxPriceSurface.minSurface)
+                        currentFilterValue.minSurfaceSelected else  minMaxPriceSurface.minSurface,
+                    maxSurfaceSelected = if(currentFilterValue.maxSurfaceSelected != null && currentFilterValue.maxSurfaceSelected <= minMaxPriceSurface.maxSurface)
+                        currentFilterValue.maxSurfaceSelected else  minMaxPriceSurface.maxSurface,
+                    agentNameSelected = currentFilterValue.agentNameSelected,
+                    listOfTypeSelected = currentFilterValue.listOfTypeSelected,
+                    listOfTownSelected = currentFilterValue.listOfTownSelected,
                 )
             }.asLiveData()
         }
+
+    fun registerCurrentFilterValueAndQuery(filterFeatureViewState: FilterFeatureViewState) {
+        val query = toQuery(filterFeatureViewState)
+        val currentFilterValue = CurrentFilterValue(
+        minPriceSelected = filterFeatureViewState.minPriceSelected,
+        maxPriceSelected = filterFeatureViewState.maxPriceSelected,
+        minSurfaceSelected = filterFeatureViewState.minSurfaceSelected,
+        maxSurfaceSelected = filterFeatureViewState.maxSurfaceSelected,
+        agentNameSelected = filterFeatureViewState.agentNameSelected,
+        listOfTypeSelected = filterFeatureViewState.listOfTypeSelected,
+        listOfTownSelected = filterFeatureViewState.listOfTownSelected,
+        )
+        propertyRepository.registerCurrentFilterValueAndQuery(query, currentFilterValue)
+        savedCurrentFilterValueMutableLiveData.value = filterFeatureViewState
+    }
+
+    private val savedCurrentFilterValueMutableLiveData = MutableLiveData<FilterFeatureViewState>()
+
+    fun registerFilterQueryWhenSubmitButtonClicked(query: String) {
+        propertyRepository.registerFilterQueryWhenSubmitButtonClicked(query)
+    }
+
+    private fun getSavedCurrentFilter(): FilterFeatureViewState {
+        return savedCurrentFilterValueMutableLiveData.value!!
+    }
+
+    fun deleteCurrentFilter() {
+        propertyRepository.deleteCurrentFilter()
+    }
 
     fun getNbrOfPropertyWithThisQuery(query: String): LiveData<List<PropertyEntity>> {
        return propertyRepository.getAllPropertyFilter(query).asLiveData()
     }
 
-    fun setInitialQueryFilter(filterViewState: FilterViewState) {
-        queryFilterMutableLiveData.value = QueryFilterViewState(
-            price = "SELECT * FROM PropertyEntity WHERE (price BETWEEN ${filterViewState.minPrice} AND ${filterViewState.maxPrice})",
-            surface = " AND (surface BETWEEN ${filterViewState.minSurface} AND ${filterViewState.maxSurface})",
-            agentName = "",
-            listOfType = "",
-            listOfTown = ""
-        )
-    }
-
-    private val initialQueryFilter =
-        QueryFilterViewState(
-            price = "",
-            surface = "",
-            agentName = "",
-            listOfType = "",
-            listOfTown = ""
-        )
-
-    private val queryFilterMutableLiveData: MutableLiveData<QueryFilterViewState> = MutableLiveData(initialQueryFilter)
-
-    val queryFilterLiveData: LiveData<QueryFilterViewState> = queryFilterMutableLiveData
-
-    private fun getQueryFilter(): QueryFilterViewState {
-        return queryFilterMutableLiveData.value!!
-    }
-
-    private fun updateQuery(query: QueryFilterViewState) {
-        queryFilterMutableLiveData.value = query
-    }
-
-    fun updateQueryFilterPrice(minPrice: Int, maxPrice: Int) {
-        updateQuery(
-            getQueryFilter().copy(
-                price = "SELECT * FROM PropertyEntity WHERE (price BETWEEN $minPrice AND $maxPrice) "
+    fun updateQueryFilterPrice(minPriceSelected: Int, maxPriceSelected: Int) {
+        registerCurrentFilterValueAndQuery(
+            getSavedCurrentFilter().copy(
+                minPriceSelected = minPriceSelected,
+                maxPriceSelected = maxPriceSelected
             )
         )
     }
 
-    fun updateQueryFilterSurface(minSurface: Int, maxSurface: Int) {
-        updateQuery(
-            getQueryFilter().copy(
-                surface = "AND (surface BETWEEN $minSurface AND $maxSurface) "
+    fun updateQueryFilterSurface(minSurfaceSelected: Int, maxSurfaceSelected: Int) {
+        registerCurrentFilterValueAndQuery(
+            getSavedCurrentFilter().copy(
+                minSurfaceSelected = minSurfaceSelected,
+                maxSurfaceSelected = maxSurfaceSelected
             )
         )
     }
 
     fun updateQueryFilterAgent(agentName: String) {
         if(agentName == "") {
-            updateQuery(
-                getQueryFilter().copy(
-                    agentName = ""
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    agentNameSelected = ""
                 )
             )
         } else {
-            updateQuery(
-                getQueryFilter().copy(
-                    agentName = "AND (agentName = '$agentName') "
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    agentNameSelected = agentName
                 )
             )
         }
     }
 
-    fun updateQueryFilterListType(typeSelected: List<String>) {
-        val stringBuilderQueryType: StringBuilder = java.lang.StringBuilder()
-        if(typeSelected.isNotEmpty()) {
-            typeSelected.forEach {
-                stringBuilderQueryType.append("'$it'")
-                if(typeSelected.indexOf(it) + 1 < typeSelected.size) {
-                    stringBuilderQueryType.append(", ")
+    fun updateQueryFilterListType(listOfTypeSelected: List<String>) {
+        if(listOfTypeSelected.isNotEmpty()) {
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    listOfTypeSelected = listOfTypeSelected
+                )
+            )
+        } else {
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    listOfTypeSelected = listOf()
+                )
+            )
+        }
+    }
+    fun updateQueryFilterListTown(listOfTownSelected: List<String>) {
+        if(listOfTownSelected.isNotEmpty()) {
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    listOfTownSelected = listOfTownSelected
+                )
+            )
+        } else {
+            registerCurrentFilterValueAndQuery(
+                getSavedCurrentFilter().copy(
+                    listOfTownSelected = listOf()
+                )
+            )
+        }
+    }
+
+    fun  toQuery(filterFeatureViewState: FilterFeatureViewState): String {
+        val typeStringBuilder = java.lang.StringBuilder()
+        val townStringBuilder = java.lang.StringBuilder()
+
+        val priceQuery: String = "SELECT * FROM PropertyEntity WHERE (price BETWEEN ${filterFeatureViewState.minPriceSelected} AND ${filterFeatureViewState.maxPriceSelected})"
+        val surfaceQuery: String = " AND (surface BETWEEN ${filterFeatureViewState.minSurfaceSelected} AND ${filterFeatureViewState.maxSurfaceSelected})"
+        val agentNameQuery = if(filterFeatureViewState.agentNameSelected == "") "" else " AND (agentName = '${filterFeatureViewState.agentNameSelected}')"
+        val listOfTypeQuery = if(filterFeatureViewState.listOfTypeSelected.isEmpty()) {
+            ""
+        } else {
+            typeStringBuilder.append(" And (type in (")
+            filterFeatureViewState.listOfTypeSelected.forEach {
+                typeStringBuilder.append("'$it'")
+                if(filterFeatureViewState.listOfTypeSelected.indexOf(it) + 1 < filterFeatureViewState.listOfTypeSelected.size) {
+                    typeStringBuilder.append(", ")
+                } else {
+                    typeStringBuilder.append("))")
                 }
             }
-            updateQuery(
-                getQueryFilter().copy(
-                    listOfType = "AND (type IN ($stringBuilderQueryType)) "
-                )
-            )
-        } else {
-            updateQuery(
-                getQueryFilter().copy(
-                    listOfType = ""
-                )
-            )
+            typeStringBuilder.toString()
         }
-    }
-    fun updateQueryFilterListTown(townSelected: List<String>) {
-        val stringBuilderQueryTown: StringBuilder = java.lang.StringBuilder()
-        if(townSelected.isNotEmpty()) {
-            townSelected.forEach {
-                stringBuilderQueryTown.append("'$it'")
-                if(townSelected.indexOf(it) + 1 < townSelected.size) {
-                    stringBuilderQueryTown.append(", ")
+        val listOfTownQuery = if(filterFeatureViewState.listOfTownSelected.isEmpty()) {
+            ""
+        } else {
+            townStringBuilder.append(" And (town in (")
+            filterFeatureViewState.listOfTownSelected.forEach {
+                townStringBuilder.append("'$it'")
+                if(filterFeatureViewState.listOfTownSelected.indexOf(it) + 1 < filterFeatureViewState.listOfTownSelected.size) {
+                    townStringBuilder.append(", ")
+                } else {
+                    townStringBuilder.append("))")
                 }
             }
-            updateQuery(
-                getQueryFilter().copy(
-                    listOfType = "AND (town IN ($stringBuilderQueryTown)) "
-                )
-            )
-        } else {
-            updateQuery(
-                getQueryFilter().copy(
-                    listOfType = ""
-                )
-            )
+            townStringBuilder.toString()
         }
+        return priceQuery + surfaceQuery + agentNameQuery + listOfTypeQuery + listOfTownQuery
     }
 
-    fun registerCurrentSearch(currentQuery : QueryFilterViewState) {
-
-    }
 
 }
 

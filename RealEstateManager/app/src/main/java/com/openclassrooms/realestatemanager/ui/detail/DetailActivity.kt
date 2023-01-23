@@ -36,6 +36,7 @@ class DetailActivity: AppCompatActivity() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
                 R.id.edit_current_property_detail -> {
+                    viewModel.setIsAnUpdate(true)
                     startActivity(Intent(this@DetailActivity, FormPropertyActivity::class.java))
                     true
                 }

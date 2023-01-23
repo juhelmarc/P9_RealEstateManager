@@ -148,8 +148,19 @@
             android:text="FILTER"
             android:layout_marginTop="@dimen/standard_margin"
             app:layout_constraintTop_toBottomOf="@+id/number_of_property_found"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/clear_filter_button"
             app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clear_filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" CLEAR FILTER"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@+id/number_of_property_found"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_button"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
