@@ -1,11 +1,13 @@
 package com.openclassrooms.realestatemanager.ui.main
 
 import androidx.lifecycle.*
+import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 
 import com.openclassrooms.realestatemanager.utils.SingleLiveEvent
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +33,11 @@ class MainViewModel @Inject constructor(
     fun onConfigurationChanged(isTablet: Boolean) {
         this.isTablet = isTablet
     }
+
+    val listPropertyLiveData: LiveData<List<PropertyEntity>> =
+        propertyRepository.getAllProperty.map { listProperty ->
+            listProperty
+        }.asLiveData()
 
     fun setIsAnUpdateProperty(isAnUpdate: Boolean) {
         propertyRepository.setIsAnUpdateProperty(isAnUpdate)

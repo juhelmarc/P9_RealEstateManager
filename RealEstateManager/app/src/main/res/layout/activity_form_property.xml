@@ -35,6 +35,16 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:listitem="@layout/item_detail"/>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/error_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/add_picture_button"
+            app:layout_constraintBottom_toBottomOf="@+id/add_picture_button"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Error message picture"
+            android:textColor="@color/red"/>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/add_picture_button"
             android:layout_width="wrap_content"
@@ -244,8 +254,9 @@
                 android:layout_height="wrap_content"
                 android:hint="Town"
                 />
-
         </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/postal_code_layout"
@@ -269,7 +280,21 @@
                 android:hint="Postal code"
                 android:inputType="number" />
 
+
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/error_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@+id/postal_code_layout"
+            app:layout_constraintBottom_toTopOf="@+id/state_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Error message address"
+            android:textColor="@color/red"/>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/state_layout"
@@ -278,7 +303,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_start_add"
             android:layout_marginTop="@dimen/margin_top_add"
-            app:layout_constraintTop_toBottomOf="@id/postal_code_layout"
+            app:layout_constraintTop_toBottomOf="@id/error_address"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:endIconMode="clear_text"

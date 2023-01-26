@@ -36,6 +36,8 @@ data class PropertyEntity(
     val entryDate: String?,
     val dateOfSale: String?,
     val poiSelected: List<Int>,
+    val lat: Double?,
+    val lng: Double?,
 
 //Ajouter ce champs dans le cas de l'utilisation de foreignKeys (plus haut)
 //    val agentId: String

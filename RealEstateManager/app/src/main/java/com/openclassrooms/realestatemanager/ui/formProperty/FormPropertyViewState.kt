@@ -24,6 +24,8 @@ data class FormPropertyViewState(
     val entryDate: String?,
     val dateOfSale: String?,
     val listPoiSelectedOrNot: List<ChipPoiViewState>,
+    val lat: Double?,
+    val lng: Double?,
 
     val typeError: String?,
     val agentError: String?,
@@ -32,7 +34,8 @@ data class FormPropertyViewState(
     val townError: String?,
     val entryDateError: String?,
     val dateOfSaleError: String?,
-    val pictureError: String?
+    val pictureError: String?,
+    val latLngError: String?
 ) {
     data class ChipPoiViewState(
         val poiId: Int,

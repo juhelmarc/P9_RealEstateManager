@@ -27,7 +27,7 @@ class DetailAdapter(
     class MyViewHolder(private val binding: ItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PropertyPictureEntity, onItemClicked: ((String) -> Unit)?) {
-            binding.description.text = item.title
+//            binding.description.text = item.title
             binding.propertyPicture.load(item.url)
             binding.item.setOnClickListener {
                 onItemClicked?.invoke(item.url)

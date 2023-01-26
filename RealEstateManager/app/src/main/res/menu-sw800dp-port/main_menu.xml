@@ -5,28 +5,34 @@
     >
 
     <item
+        android:id="@+id/map"
+        android:icon="@drawable/ic_baseline_map_24"
+        android:title="map"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/add_property"
         android:icon="@drawable/ic_baseline_add_24"
         android:title="add_property"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/edit_current_property"
         android:icon="@drawable/ic_baseline_mode_edit_24"
         android:title="edit_property"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="search"
-        app:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="always"
         />
 
     <item
         android:id="@+id/search_off"
         android:icon="@drawable/ic_baseline_search_off_24"
         android:title="search_off"
-        app:showAsAction="collapseActionView|ifRoom"/>
+        app:showAsAction="always"/>
 
 </menu>

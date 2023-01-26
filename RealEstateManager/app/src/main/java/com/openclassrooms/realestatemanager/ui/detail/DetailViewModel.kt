@@ -54,36 +54,12 @@ class DetailViewModel @Inject constructor(
                 } else {
                     combine(
                         propertyRepository.getAllProperty,
-                        propertyRepository.getPropertyByIdFlow(1L),
-                        propertyRepository.getAllPicturesOfThisProperty(1L)
-                    ) { listProperty, defaultProperty, listPicture ->
-                        if (listProperty.isNotEmpty()) {
-                            propertyRepository.setCurrentPropertyId(1L)
-                            val poiIdListOfThisProperty: List<Int> = defaultProperty.poiSelected
-                            val listPoiSelectedOrNot: List<ChipPoiViewStateDetail> =
-                                PoiList.values().map { poi ->
-                                    ChipPoiViewStateDetail(
-                                        poiId = poi.poiId,
-                                        isSelected = poiIdListOfThisProperty.contains(poi.poiId)
-                                    )
-                                }
-                            DetailViewState.NotSelected(
-                                defaultProperty.id,
-                                defaultProperty.description,
-                                defaultProperty.town,
-                                defaultProperty.address,
-                                defaultProperty.postalCode,
-                                defaultProperty.surface,
-                                defaultProperty.numberOfRooms,
-                                defaultProperty.numberOfBathrooms,
-                                defaultProperty.numberOfBedrooms,
-                                defaultProperty.state,
-                                listPoiSelectedOrNot,
-                                listPicture,
-                                defaultProperty.entryDate,
-                                defaultProperty.dateOfSale
-                            )
+                    ) { listProperty ->
+                        if (listProperty[0].isEmpty()) {
+                            DetailViewState.Empty
+
                         } else {
+                            propertyRepository.setCurrentPropertyId(1L)
                             DetailViewState.Empty
                         }
                     }.asLiveData()

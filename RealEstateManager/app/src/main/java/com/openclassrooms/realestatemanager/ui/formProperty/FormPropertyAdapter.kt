@@ -23,7 +23,7 @@ class FormPropertyAdapter()
     class MyViewHolder(private val binding: ItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PropertyPictureEntity) {
-            binding.description.text = item.title
+//            binding.description.text = item.title
             binding.propertyPicture.load(item.url)
 
         }

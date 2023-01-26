@@ -1,18 +1,33 @@
 package com.openclassrooms.realestatemanager.ui.formProperty
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.HandlerCompat.postDelayed
+import androidx.core.view.doOnNextLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
@@ -21,18 +36,25 @@ import com.openclassrooms.realestatemanager.databinding.ActivityFormPropertyBind
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class FormPropertyActivity: AppCompatActivity() {
 
     private val viewModel by viewModels<FormPropertyViewModel>()
 
+    private val CHANNEL_ID = "ChannelId"
+    private val NOTIFICATION_ID = 12
 
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityFormPropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        createNotificationChannel()
         viewModel.initialViewStateLiveData.observe(this) {
             viewModel.setInitialViewState(it)
         }
@@ -43,7 +65,6 @@ class FormPropertyActivity: AppCompatActivity() {
             .build()
         binding.entryDateInput.setOnClickListener{
             entryDatePicker.show(supportFragmentManager,"Material_Date_Picker" )
-
             entryDatePicker.addOnPositiveButtonClickListener {
                 viewModel.updateEntryDate(entryDatePicker.selection.toString())
             }
@@ -54,7 +75,6 @@ class FormPropertyActivity: AppCompatActivity() {
             .build()
         binding.sellingDateInput.setOnClickListener {
             dateOfSalePicker.show(supportFragmentManager, "Material_Date_Picker")
-
             dateOfSalePicker.addOnPositiveButtonClickListener {
                 viewModel.updateDateOfSale(dateOfSalePicker.selection.toString())
             }
@@ -74,7 +94,6 @@ class FormPropertyActivity: AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 val resultCode = result.resultCode
                 val data = result.data
-
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         //Image Uri will not be null for RESULT_OK
@@ -98,19 +117,82 @@ class FormPropertyActivity: AppCompatActivity() {
                 .createIntent { intent ->
                     startForProfileImageResult.launch(intent)
                 }
+//            binding.formRecyclerview.requestFocus()
         }
         //Update Data
-        binding.typeInput.doAfterTextChanged { viewModel.updateType(it?.toString()) }
-        binding.surfaceInput.doAfterTextChanged { viewModel.updateSurface(it.toString()) }
-        binding.nbrRoomInput.doAfterTextChanged { viewModel.updateRoom(it?.toString()) }
-        binding.nbrBathroomInput.doAfterTextChanged { viewModel.updateBathRoom(it.toString())}
-        binding.nbrBedroomInput.doAfterTextChanged { viewModel.updateBedRoom(it.toString()) }
-        binding.postalCodeInput.doAfterTextChanged { viewModel.updatePostalCode(it.toString()) }
-        binding.addressInput.doAfterTextChanged { viewModel.updateAddress(it.toString()) }
-        binding.townInput.doAfterTextChanged { viewModel.updateTown(it.toString()) }
-        binding.stateInput.doAfterTextChanged { viewModel.updateState(it.toString()) }
-        binding.descriptionInput.doAfterTextChanged { viewModel.updateDescription(it.toString()) }
-        binding.propertyPriceInput.doAfterTextChanged { viewModel.updatePrice(it.toString()) }
+        binding.typeInput.setOnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateType(binding.typeInput.text.toString())
+            }
+        }
+
+        binding.surfaceInput.setOnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateSurface(binding.surfaceInput.text.toString())
+            }
+        }
+
+        binding.nbrRoomInput.setOnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateRoom(binding.nbrRoomInput.text.toString())
+            }
+        }
+
+        binding.nbrBathroomInput.setOnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateBathRoom(binding.nbrBathroomInput.text.toString())
+            }
+        }
+
+        binding.nbrBedroomInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateBedRoom(binding.nbrBedroomInput.text.toString())
+            }
+        }
+        binding.postalCodeInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updatePostalCode(binding.postalCodeInput.text.toString())
+                if (binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
+                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()))
+                }
+            }
+        }
+        binding.addressInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateAddress(binding.addressInput.text.toString())
+                if (binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
+                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()))
+                }
+            }
+        }
+        binding.townInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateTown(binding.townInput.text.toString())
+                if(binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
+                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString() ))
+                }
+            }
+        }
+        binding.stateInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateState(binding.stateInput.text.toString())
+            }
+        }
+        binding.descriptionInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updateDescription(binding.descriptionInput.text.toString())
+            }
+        }
+        binding.propertyPriceInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updatePrice(binding.propertyPriceInput.text.toString())
+            }
+        }
+        binding.propertyPriceInput.setOnFocusChangeListener{ _, hasFocus ->
+            if(!hasFocus) {
+                viewModel.updatePrice(binding.propertyPriceInput.text.toString())
+            }
+        }
 
         //AgentList
         binding.agentInput.setOnItemClickListener { parent, _, position, _ ->
@@ -167,15 +249,70 @@ class FormPropertyActivity: AppCompatActivity() {
             binding.townLayout.error = formPropertyViewState.townError
             binding.entryDateLayout.error = formPropertyViewState.entryDateError
             binding.sellingDateLayout.error = formPropertyViewState.dateOfSaleError
-
+            binding.errorAddress.text = formPropertyViewState.latLngError
+            binding.errorPicture.text = formPropertyViewState.pictureError
 
         }
-
+        // TODO : Peut être mieux de clear le focus directement dans les updates et mettre le focus sur chaque edittext -> ne marche pas le faire lorsqu'il y a des erreurs ?
         binding.submitButton.setOnClickListener {
+            binding.poiList.requestFocus()
             if(viewModel.onSubmitButtonClicked()) {
+                if(!viewModel.isAnUpdate) {
+//                    val intent = Intent(this, FormPropertyActivity::class.java).apply {
+//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                    }
+//                    val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+                    val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_baseline_add_home_work_24)
+                        .setContentTitle("Property :")
+                        .setContentText("Added successfully")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+//                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+
+                    with(NotificationManagerCompat.from(this)) {
+                        notify(NOTIFICATION_ID, builder.build())
+                    }
+                }
+
                 finish()
+            } else {
+                binding.formRecyclerview.clearFocus()
+                binding.poiList.clearFocus()
+                binding.addressInput.clearFocus()
+                binding.postalCodeInput.clearFocus()
+                binding.townInput.clearFocus()
+                binding.agentInput.clearFocus()
+                viewModel.viewStateLiveData.observe(this) { viewState ->
+                    val error : String =
+                        viewState.pictureError
+                            ?: (viewState.addressError
+                                ?: (viewState.postalCodeError
+                                    ?: (viewState.townError
+                                        ?: (viewState.agentError
+                                            ?: (viewState.typeError
+                                                ?: (viewState.latLngError?: ""))))))
+
+                    when(error) {
+                        viewState.pictureError ->
+                            binding.formRecyclerview.requestFocus()
+                        viewState.addressError ->
+                            binding.addressInput.requestFocus()
+                        viewState.postalCodeError ->
+                            binding.postalCodeInput.requestFocus()
+                        viewState.townError ->
+                            binding.townInput.requestFocus()
+                        viewState.typeError ->
+                            binding.typeInput.requestFocus()
+                        viewState.agentError ->
+                            binding.agentInput.requestFocus()
+                        viewState.latLngError ->
+                            binding.formRecyclerview.requestFocus()
+                    }
+                }
             }
         }
+
     }
 
     private fun formatDate(dateMilli: Long): String {
@@ -183,5 +320,35 @@ class FormPropertyActivity: AppCompatActivity() {
         val simpleDateFormat: SimpleDateFormat = SimpleDateFormat(format, Locale.US)
         return simpleDateFormat.format(dateMilli)
     }
+
+    private fun getLatLngFromAddress(address: String): LatLng? {
+        val latLng: LatLng?
+        val geocoder = Geocoder(this)
+        var listAddress: List<Address>? = listOf<Address>()
+        listAddress = geocoder.getFromLocationName(address, 5)
+        if(listAddress?.isNotEmpty() == true) {
+            latLng = LatLng( (listAddress as MutableList<Address>)[0].latitude, (listAddress as MutableList<Address>)[0].longitude)
+        } else {
+            latLng = null
+        }
+        return latLng
+    }
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "getString(R.string.channel_name)"
+            val descriptionText = "getString(R.string.channel_description)"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
 
 }
