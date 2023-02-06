@@ -1,8 +1,7 @@
 package com.openclassrooms.realestatemanager.data
 
-import androidx.room.ProvidedTypeConverter
-import androidx.room.TypeConverter
 
+import androidx.room.TypeConverter
 
 object Converters {
 
@@ -11,10 +10,9 @@ object Converters {
         val poiList = mutableListOf<Int>()
         val poiListString = value?.split("\\s*,\\s*".toRegex())?.toTypedArray()
         poiListString?.forEach {
-            if(it != "") {
+            if (it != "") {
                 poiList.add(it.toInt())
             }
-
         }
         return poiList
     }
@@ -24,10 +22,7 @@ object Converters {
         var poiString = ""
         value?.forEach {
             poiString = "$poiString$it,"
-            //poiString.append(it.toString()).append(",")
         }
         return poiString
     }
-
-
 }

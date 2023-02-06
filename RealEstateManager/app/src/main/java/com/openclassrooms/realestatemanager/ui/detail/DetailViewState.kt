@@ -4,8 +4,8 @@ import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicture
 
 sealed class DetailViewState() {
 
-    data class Selected (
-        val id : Long,
+    data class Selected(
+        val id: Long,
         val description: String?,
         val town: String?,
         val address: String?,
@@ -16,14 +16,16 @@ sealed class DetailViewState() {
         val numberOfBedRooms: String?,
         val state: String?,
         val poiSelected: List<ChipPoiViewStateDetail>,
-        val listPicture : List<PropertyPictureEntity>,
+        val listPicture: List<PropertyPictureEntity>,
         val entryDate: String?,
         val sellingDate: String?
     ) : DetailViewState()
 
     object Empty : DetailViewState()
-//    object  NotSelected : DetailViewState()
-} data class ChipPoiViewStateDetail(
+
+}
+
+data class ChipPoiViewStateDetail(
     val poiId: Int,
     val isSelected: Boolean
 )

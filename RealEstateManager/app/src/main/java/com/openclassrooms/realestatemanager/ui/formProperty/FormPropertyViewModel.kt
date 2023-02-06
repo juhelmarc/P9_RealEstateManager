@@ -1,9 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.formProperty
 
-import android.location.Address
-import android.location.Geocoder
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.*
 import com.google.android.gms.maps.model.LatLng
 import com.openclassrooms.realestatemanager.data.PoiList
@@ -12,8 +8,8 @@ import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -21,21 +17,19 @@ import javax.inject.Inject
 @HiltViewModel
 class FormPropertyViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
-): ViewModel() {
-    //On veut récupérer l'id de la property,
-    // si id == 0L -> alors notre propertyEntitymutableStateFlow.value = formPropertyEmpty
-    // si id != 0L -> alors nous récupérons la propertyEntity correspondant à cet Id et propertyEntityMutableStateFlow.value = cette propertyEntity
+) : ViewModel() {
 
     private val messageError = "Is mandatory"
 
-    val agentListLiveData: LiveData<List<AgentEntity>> = propertyRepository.getAllAgent().asLiveData()
+    val agentListLiveData: LiveData<List<AgentEntity>> =
+        propertyRepository.getAllAgent().asLiveData()
 
     val isAnUpdate: Boolean =
-        propertyRepository.isAnUpdatePropertyLiveData.value!!
+        propertyRepository.getIsAnUpdatePropertyLiveData().value!!
 
     val initialViewStateLiveData: LiveData<FormPropertyViewState> =
-        propertyRepository.currentIdLiveData.switchMap { id ->
-            propertyRepository.isAnUpdatePropertyLiveData.switchMap { isAnUpdate ->
+        propertyRepository.getCurrentIdLiveData().switchMap { id ->
+            propertyRepository.getIsAnUpdatePropertyLiveData().switchMap { isAnUpdate ->
                 if (isAnUpdate) {
                     combine(
                         propertyRepository.getPropertyByIdFlow(id),
@@ -151,30 +145,34 @@ class FormPropertyViewModel @Inject constructor(
         mutableStateFlowViewState.asLiveData()
 
     fun onSubmitButtonClicked(): Boolean {
-        if(checkError()) {
+        if (checkError()) {
             updatePropertyEntity(getPropertyViewState())
         }
         return checkError()
     }
 
     private fun checkError(): Boolean {
-        if(getPropertyViewState().agentName == "") {
+        if (getPropertyViewState().agentName == "") {
             updatePropertyViewState(
-                getPropertyViewState().copy(agentError = "Chose an agent"))
+                getPropertyViewState().copy(agentError = "Chose an agent")
+            )
             //Guard de swift return true
         } else {
             updatePropertyViewState(
-                getPropertyViewState().copy(agentError = null))
+                getPropertyViewState().copy(agentError = null)
+            )
         }
-        if(getPropertyViewState().type == "") {
+        if (getPropertyViewState().type == "") {
             updatePropertyViewState(
-                getPropertyViewState().copy(typeError = "Add a type"))
+                getPropertyViewState().copy(typeError = "Add a type")
+            )
         } else {
             updatePropertyViewState(
-                getPropertyViewState().copy(typeError = null))
+                getPropertyViewState().copy(typeError = null)
+            )
         }
 
-        if(getPropertyViewState().postalCode.toString().length != 5) {
+        if (getPropertyViewState().postalCode.toString().length != 5) {
             updatePropertyViewState(
                 getPropertyViewState().copy(postalCodeError = "5 numbers are required")
             )
@@ -183,7 +181,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(postalCodeError = null)
             )
         }
-        if(getPropertyViewState().address == "") {
+        if (getPropertyViewState().address == "") {
             updatePropertyViewState(
                 getPropertyViewState().copy(addressError = messageError)
             )
@@ -192,7 +190,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(addressError = null)
             )
         }
-        if(getPropertyViewState().town == "") {
+        if (getPropertyViewState().town == "") {
             updatePropertyViewState(
                 getPropertyViewState().copy(townError = "Add a Town")
             )
@@ -201,7 +199,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(townError = null)
             )
         }
-        if(getPropertyViewState().entryDate == "" && getPropertyViewState().dateOfSale != "") {
+        if (getPropertyViewState().entryDate == "" && getPropertyViewState().dateOfSale != "") {
             updatePropertyViewState(
                 getPropertyViewState().copy(entryDateError = "Edit entry date")
             )
@@ -210,7 +208,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(entryDateError = null)
             )
         }
-        if( getPropertyViewState().entryDate != "" && getPropertyViewState().dateOfSale != "" &&
+        if (getPropertyViewState().entryDate != "" && getPropertyViewState().dateOfSale != "" &&
             getPropertyViewState().entryDate!! > getPropertyViewState().dateOfSale!!
         ) {
             updatePropertyViewState(
@@ -221,7 +219,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(dateOfSaleError = null)
             )
         }
-        if(getPropertyViewState().listPicture.isEmpty()) {
+        if (getPropertyViewState().listPicture.isEmpty()) {
             updatePropertyViewState(
                 getPropertyViewState().copy(pictureError = "You need add one picture")
             )
@@ -230,7 +228,7 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(pictureError = null)
             )
         }
-        if(getPropertyViewState().lat == null || getPropertyViewState().lng == null) {
+        if (getPropertyViewState().lat == null || getPropertyViewState().lng == null) {
             updatePropertyViewState(
                 getPropertyViewState().copy(latLngError = "Address or Town or Postal code are not correct")
             )
@@ -251,45 +249,48 @@ class FormPropertyViewModel @Inject constructor(
     }
 
 
-    private fun updatePropertyEntity(formPropertyViewState: FormPropertyViewState) = viewModelScope.launch {
-        val listPoiSelected = mutableListOf<Int>()
-        formPropertyViewState.listPoiSelectedOrNot.forEach { poi ->
-            if(poi.isSelected) {
-                listPoiSelected.add(poi.poiId)
+    private fun updatePropertyEntity(formPropertyViewState: FormPropertyViewState) =
+        viewModelScope.launch {
+            val listPoiSelected = mutableListOf<Int>()
+            formPropertyViewState.listPoiSelectedOrNot.forEach { poi ->
+                if (poi.isSelected) {
+                    listPoiSelected.add(poi.poiId)
+                }
+            }
+            val propertyId =
+                propertyRepository.insertProperty(
+                    PropertyEntity(
+                        id = formPropertyViewState.id,
+                        agentId = formPropertyViewState.agentId,
+                        agentName = formPropertyViewState.agentName,
+                        type = formPropertyViewState.type,
+                        price = formPropertyViewState.price,
+                        description = formPropertyViewState.description,
+                        surface = formPropertyViewState.surface,
+                        numberOfRooms = formPropertyViewState.numberOfRooms,
+                        numberOfBathrooms = formPropertyViewState.numberOfBathrooms,
+                        numberOfBedrooms = formPropertyViewState.numberOfBedrooms,
+                        town = formPropertyViewState.town,
+                        address = formPropertyViewState.address,
+                        postalCode = formPropertyViewState.postalCode,
+                        state = formPropertyViewState.state,
+                        mainPicture = formPropertyViewState.listPicture[0].url,
+                        isAvailable = formPropertyViewState.isAvailable,
+                        entryDate = formPropertyViewState.entryDate,
+                        dateOfSale = formPropertyViewState.dateOfSale,
+                        poiSelected = listPoiSelected,
+                        lat = formPropertyViewState.lat,
+                        lng = formPropertyViewState.lng
+                    )
+                )
+            formPropertyViewState.listPicture.forEach { picture ->
+                val pictureToInsert = picture.copy(propertyId = propertyId)
+                propertyRepository.insertPicture(pictureToInsert)
             }
         }
-        val propertyId =
-            propertyRepository.insertProperty(PropertyEntity(
-                id = formPropertyViewState.id,
-                agentId = formPropertyViewState.agentId,
-                agentName = formPropertyViewState.agentName,
-                type = formPropertyViewState.type,
-                price = formPropertyViewState.price,
-                description = formPropertyViewState.description,
-                surface = formPropertyViewState.surface,
-                numberOfRooms = formPropertyViewState.numberOfRooms,
-                numberOfBathrooms = formPropertyViewState.numberOfBathrooms,
-                numberOfBedrooms = formPropertyViewState.numberOfBedrooms,
-                town = formPropertyViewState.town,
-                address = formPropertyViewState.address,
-                postalCode = formPropertyViewState.postalCode,
-                state = formPropertyViewState.state,
-                mainPicture = formPropertyViewState.listPicture[0].url,
-                isAvailable = formPropertyViewState.isAvailable,
-                entryDate = formPropertyViewState.entryDate,
-                dateOfSale = formPropertyViewState.dateOfSale,
-                poiSelected = listPoiSelected,
-                lat = formPropertyViewState.lat,
-                lng = formPropertyViewState.lng
-            ))
-        formPropertyViewState.listPicture.forEach { picture ->
-            val pictureToInsert = picture.copy(propertyId = propertyId)
-            propertyRepository.insertPicture(pictureToInsert)
-        }
-    }
 
     fun updateLatLng(latLng: LatLng?) {
-        if(latLng != null) {
+        if (latLng != null) {
             updatePropertyViewState(
                 getPropertyViewState().copy(
                     lat = latLng.latitude,
@@ -316,8 +317,9 @@ class FormPropertyViewModel @Inject constructor(
             poiId = poiId,
             isSelected = isChecked
         )
-        updatePropertyViewState(getPropertyViewState().copy(
-            listPoiSelectedOrNot = listPoi
+        updatePropertyViewState(
+            getPropertyViewState().copy(
+                listPoiSelectedOrNot = listPoi
             )
         )
     }
@@ -328,15 +330,16 @@ class FormPropertyViewModel @Inject constructor(
         listPicture.add(PropertyPictureEntity(0L, 0L, picture, ""))
         updatePropertyViewState(
             getPropertyViewState().copy(
-                listPicture =  listPicture,
-//                pictureError = null
+                listPicture = listPicture,
             )
         )
     }
 
     fun updateType(typeToUpdate: String?) {
-        updatePropertyViewState(getPropertyViewState().copy(type = typeToUpdate?.lowercase(Locale.ROOT)
-            ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }))
+        updatePropertyViewState(
+            getPropertyViewState().copy(type = typeToUpdate?.lowercase(Locale.ROOT)
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() })
+        )
     }
 
     fun updateAgent(agent: AgentEntity) {
@@ -347,8 +350,9 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateSurface(surface: String) {
-        if(surface != "" ) {
+        if (surface != "") {
             updatePropertyViewState(
                 getPropertyViewState().copy(
                     surface = surface.toInt()
@@ -361,7 +365,9 @@ class FormPropertyViewModel @Inject constructor(
                 )
             )
         }
+        surface.indices
     }
+
     fun updateRoom(nbrRoom: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -369,6 +375,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateBathRoom(nbrBathRoom: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -376,6 +383,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateBedRoom(nbrBedRoom: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -383,6 +391,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updatePostalCode(postalCode: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -399,6 +408,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateState(state: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -406,6 +416,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateEntryDate(entryDate: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -413,6 +424,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateDateOfSale(dateOfSale: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
@@ -420,14 +432,17 @@ class FormPropertyViewModel @Inject constructor(
             )
         )
     }
+
     fun updateDescription(description: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(
                 description = description
-            ))
+            )
+        )
     }
+
     fun updatePrice(price: String) {
-        if(price != "") {
+        if (price != "") {
             updatePropertyViewState(
                 getPropertyViewState().copy(
                     price = price.toInt()
@@ -441,6 +456,7 @@ class FormPropertyViewModel @Inject constructor(
             )
         }
     }
+
     fun updateTown(town: String?) {
         updatePropertyViewState(
             getPropertyViewState().copy(

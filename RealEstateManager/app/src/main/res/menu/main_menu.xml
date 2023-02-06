@@ -5,6 +5,12 @@
     >
 <!--    <group android:checkableBehavior="none">-->
         <item
+            android:id="@+id/borrow"
+            android:icon="@drawable/ic_baseline_attach_money_24"
+            android:title="borrow"
+            app:showAsAction="always"
+                />
+        <item
             android:id="@+id/map"
             android:icon="@drawable/ic_baseline_map_24"
             android:title="map"

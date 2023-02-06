@@ -3,9 +3,11 @@ package com.openclassrooms.realestatemanager.data.repositories
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.openclassrooms.realestatemanager.data.dao.*
+import com.openclassrooms.realestatemanager.data.dao.AgentDao
+import com.openclassrooms.realestatemanager.data.dao.PictureDao
+import com.openclassrooms.realestatemanager.data.dao.PropertyDao
+import com.openclassrooms.realestatemanager.data.dao.PropertyPriceSurface
 import com.openclassrooms.realestatemanager.data.models.CurrentFilterValue
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
@@ -21,19 +23,24 @@ class PropertyRepository @Inject constructor(
     private val agentDao: AgentDao,
     private val pictureDao: PictureDao,
     private val propertyDao: PropertyDao,
-//    private val poiDao: PoiDao
-    ) {
+) {
 
-    val getAllProperty: Flow<List<PropertyEntity>> = propertyDao.getAllProperty()
+    fun getAllProperty(): Flow<List<PropertyEntity>> {
+        return propertyDao.getAllProperty()
+    }
 
-    fun getAllPropertyFilter(query: String): Flow<List<PropertyEntity>> = propertyDao.getAllPropertyFilter(SimpleSQLiteQuery(query))
+    fun getAllPropertyFilter(query: String): Flow<List<PropertyEntity>> {
+        return propertyDao.getAllPropertyFilter(SimpleSQLiteQuery(query))
+    }
 
     @WorkerThread
-    suspend fun insertProperty(property: PropertyEntity): Long = propertyDao.insertProperty(property)
+    suspend fun insertProperty(property: PropertyEntity): Long =
+        propertyDao.insertProperty(property)
 
-
-    fun getPropertyByIdFlow(id: Long): Flow<PropertyEntity> = getAllProperty.map { propertiesList ->
-        propertiesList.first { it.id == id }
+    fun getPropertyByIdFlow(id: Long): Flow<PropertyEntity> {
+        return getAllProperty().map { propertiesList ->
+            propertiesList.first { it.id == id }
+        }
     }
 
     @WorkerThread
@@ -42,7 +49,7 @@ class PropertyRepository @Inject constructor(
     }
 
     fun getAllPicturesOfThisProperty(propertyId: Long): Flow<List<PropertyPictureEntity>> {
-       return pictureDao.getAllPropertyPictures(propertyId)
+        return pictureDao.getAllPropertyPictures(propertyId)
     }
 
     fun getAllAgent(): Flow<List<AgentEntity>> {
@@ -51,7 +58,9 @@ class PropertyRepository @Inject constructor(
 
     private val formPropertyIdMutableLiveData = MutableLiveData<Long>()
 
-    val currentIdLiveData: LiveData<Long> = formPropertyIdMutableLiveData
+    fun getCurrentIdLiveData(): LiveData<Long> {
+        return formPropertyIdMutableLiveData
+    }
 
     fun setCurrentPropertyId(id: Long) {
         formPropertyIdMutableLiveData.value = id
@@ -59,7 +68,9 @@ class PropertyRepository @Inject constructor(
 
     private val isAnUpdatePropertyMutableStateLiveData = MutableLiveData<Boolean>()
 
-    val isAnUpdatePropertyLiveData: LiveData<Boolean> = isAnUpdatePropertyMutableStateLiveData
+    fun getIsAnUpdatePropertyLiveData(): LiveData<Boolean> {
+        return isAnUpdatePropertyMutableStateLiveData
+    }
 
     fun setIsAnUpdateProperty(isAnUpdate: Boolean) {
         isAnUpdatePropertyMutableStateLiveData.value = isAnUpdate
@@ -69,14 +80,12 @@ class PropertyRepository @Inject constructor(
 
     private val queryFilterMutableLiveData = MutableLiveData<String>(initialQuery)
 
-    val queryFilterLiveData: LiveData<String> = queryFilterMutableLiveData
-
-    private val queryFilterListFragmentMutableLiveData = MutableLiveData<String>(initialQuery)
-
-    val queryFilterListFragmentLiveData: LiveData<String> = queryFilterListFragmentMutableLiveData
+    fun getQueryFilter(): LiveData<String> {
+        return queryFilterMutableLiveData
+    }
 
     fun registerFilterQueryWhenSubmitButtonClicked(query: String) {
-        queryFilterListFragmentMutableLiveData.value = query
+        queryFilterMutableLiveData.value = query
     }
 
     private val initialFilter = CurrentFilterValue(
@@ -89,33 +98,31 @@ class PropertyRepository @Inject constructor(
         listOfTownSelected = listOf()
     )
 
-    private val currentFilterValueMutableLiveData = MutableStateFlow<CurrentFilterValue>(initialFilter)
+    private val currentFilterValueMutableStateFlow =
+        MutableStateFlow<CurrentFilterValue>(initialFilter)
 
-    val currentFilterValue: Flow<CurrentFilterValue> = currentFilterValueMutableLiveData
+    fun getCurrentFilterValue(): Flow<CurrentFilterValue> {
+        return currentFilterValueMutableStateFlow
+    }
 
     fun deleteCurrentFilter() {
-        currentFilterValueMutableLiveData.value = initialFilter
+        currentFilterValueMutableStateFlow.value = initialFilter
         queryFilterMutableLiveData.value = initialQuery
-        queryFilterListFragmentMutableLiveData.value = initialQuery
-    }
-    fun registerCurrentFilterValueAndQuery(query: String, value: CurrentFilterValue) {
-        queryFilterMutableLiveData.value = query
-        currentFilterValueMutableLiveData.value = value
     }
 
-    fun getListIdProperty() : LiveData<List<Int>> {
-        return propertyDao.getListId()
+    fun registerCurrentFilterValue(value: CurrentFilterValue) {
+        currentFilterValueMutableStateFlow.value = value
     }
 
-    fun getMinMaxPriceAndSurface(listId: List<Int>): Flow<PropertyPriceSurface> {
-        return propertyDao.getMinMaxPriceAndSurface(listId)
+    fun getMinMaxPriceAndSurface(): Flow<PropertyPriceSurface> {
+        return propertyDao.getMinMaxPriceAndSurface()
     }
 
     fun getListType(): Flow<List<String>> {
         return propertyDao.getListType()
     }
+
     fun getListTown(): Flow<List<String>> {
         return propertyDao.getListTown()
     }
-
 }

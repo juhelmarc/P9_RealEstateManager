@@ -1,11 +1,12 @@
 package com.openclassrooms.realestatemanager.ui.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
-
-import com.openclassrooms.realestatemanager.utils.SingleLiveEvent
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
+import com.openclassrooms.realestatemanager.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,21 +22,20 @@ class MainViewModel @Inject constructor(
     val navigateSingleLiveEvent = SingleLiveEvent<MainViewAction>()
 
 
-
     init {
         navigateSingleLiveEvent.addSource(currentPropertyRepository.currentIdLiveData) {
-            if(!isTablet) {
+            if (!isTablet) {
                 navigateSingleLiveEvent.setValue(MainViewAction.NavigateToDetailActivity)
             }
         }
     }
-    //dans la onResume méthode de la MainActivity nous appellons cette méthode et on verrifie
+
     fun onConfigurationChanged(isTablet: Boolean) {
         this.isTablet = isTablet
     }
 
     val listPropertyLiveData: LiveData<List<PropertyEntity>> =
-        propertyRepository.getAllProperty.map { listProperty ->
+        propertyRepository.getAllProperty().map { listProperty ->
             listProperty
         }.asLiveData()
 
@@ -46,9 +46,6 @@ class MainViewModel @Inject constructor(
     fun deleteCurrentFilter() {
         propertyRepository.deleteCurrentFilter()
     }
-
-    val currentIdLiveData: LiveData<Long> =
-        currentPropertyRepository.currentIdLiveData
 
     fun setCurrentPropertyId(id: Long) {
         propertyRepository.setCurrentPropertyId(id)

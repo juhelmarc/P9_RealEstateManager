@@ -21,13 +21,14 @@ class ChipAdapter(
         holder.bind(getItem(position), listener)
     }
 
-    class MyViewHolder(private val binding: ItemChipBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ItemChipBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: FormPropertyViewState.ChipPoiViewState, listener: (Int, Boolean) -> Unit) {
             binding.chipItem.tag = item.poiId
             binding.chipItem.setText(item.poiId)
             binding.chipItem.isChecked = item.isSelected
-            if(item.isSelected) {
+            if (item.isSelected) {
                 binding.chipItem.setChipBackgroundColorResource(R.color.purple)
             } else {
                 binding.chipItem.setChipBackgroundColorResource(R.color.grey_font)
@@ -40,15 +41,22 @@ class ChipAdapter(
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<FormPropertyViewState.ChipPoiViewState>() {
-            override fun areItemsTheSame(oldItem: FormPropertyViewState.ChipPoiViewState, newItem: FormPropertyViewState.ChipPoiViewState): Boolean {
-                return (oldItem == newItem)
-            }
+        private val DiffCallback =
+            object : DiffUtil.ItemCallback<FormPropertyViewState.ChipPoiViewState>() {
+                override fun areItemsTheSame(
+                    oldItem: FormPropertyViewState.ChipPoiViewState,
+                    newItem: FormPropertyViewState.ChipPoiViewState
+                ): Boolean {
+                    return (oldItem == newItem)
+                }
 
-            @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: FormPropertyViewState.ChipPoiViewState, newItem: FormPropertyViewState.ChipPoiViewState): Boolean {
-                return oldItem == newItem
+                @SuppressLint("DiffUtilEquals")
+                override fun areContentsTheSame(
+                    oldItem: FormPropertyViewState.ChipPoiViewState,
+                    newItem: FormPropertyViewState.ChipPoiViewState
+                ): Boolean {
+                    return oldItem == newItem
+                }
             }
-        }
     }
 }

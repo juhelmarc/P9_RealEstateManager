@@ -2,34 +2,24 @@ package com.openclassrooms.realestatemanager.ui.map
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMapBinding
-import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.map.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import com.openclassrooms.realestatemanager.ui.map.PermissionUtils.isPermissionGranted
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,14 +27,14 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class MapsActivity: AppCompatActivity(),
+class MapsActivity : AppCompatActivity(),
     OnMyLocationButtonClickListener,
     GoogleMap.OnMyLocationClickListener, OnMapReadyCallback,
-    OnRequestPermissionsResultCallback{
+    OnRequestPermissionsResultCallback {
 
     private val viewModel by viewModels<MapsViewModel>()
 
-    private val DEFAULT_ZOOM : Float = 14f
+
     private lateinit var map: GoogleMap
     private var permissionDenied = false
 
@@ -53,7 +43,8 @@ class MapsActivity: AppCompatActivity(),
         super.onCreate(savedInstanceState)
         val binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment?
+        val mapFragment =
+            supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
 
@@ -65,9 +56,17 @@ class MapsActivity: AppCompatActivity(),
 
         viewModel.mapsViewStateListLiveData.observe(this) { listMapsViewState ->
             addMarkers(googleMap, listMapsViewState)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(listMapsViewState[0].lat!!, listMapsViewState[0].lng!!), DEFAULT_ZOOM))
+            map.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        listMapsViewState[0].lat!!,
+                        listMapsViewState[0].lng!!
+                    ), DEFAULT_ZOOM
+                )
+            )
         }
     }
+
     /**
      * Enables the My Location layer if the fine location permission has been granted.
      */
@@ -117,12 +116,11 @@ class MapsActivity: AppCompatActivity(),
 
     private fun addMarkers(googleMap: GoogleMap, listMapsViewState: List<MapsViewState>) {
         listMapsViewState.forEach { viewState ->
-            if(viewState.lat != null && viewState.lng != null) {
+            if (viewState.lat != null && viewState.lng != null) {
                 val marker = googleMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(viewState.lat, viewState.lng))
                         .title("${viewState.price} $  ${viewState.type}")
-
                 )
 
             }
@@ -131,20 +129,17 @@ class MapsActivity: AppCompatActivity(),
         map.setOnMarkerClickListener { marker ->
             viewModel.mapsViewStateListLiveData.observe(this) { listMapsViewState ->
                 listMapsViewState.forEach { viewState ->
-                    if(LatLng(viewState.lat!!, viewState.lng!!) == marker.position) {
+                    if (LatLng(viewState.lat!!, viewState.lng!!) == marker.position) {
                         viewModel.onItemMarkerClick(viewState.id)
                         finish()
 //                        startActivity(Intent(this@MapsActivity, DetailActivity::class.java))
                     }
                 }
             }
-        true
+            true
         }
         googleMap.uiSettings.isZoomControlsEnabled = true
     }
-
-
-
 
 
     override fun onMyLocationButtonClick(): Boolean {
@@ -220,6 +215,7 @@ class MapsActivity: AppCompatActivity(),
          * @see .onRequestPermissionsResult
          */
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        private const val DEFAULT_ZOOM: Float = 14f
     }
 
 

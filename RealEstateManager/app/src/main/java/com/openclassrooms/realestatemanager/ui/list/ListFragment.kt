@@ -17,29 +17,26 @@ class ListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<ListViewModel>()
-    //au moment de la creation de la vue on attribu une valeur à notre varriable _binding autre que sa valeur par défaut null
-    // (que l'on repassera à null lors de la destruction de la vue)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val recyclerView: RecyclerView = binding.root
         val adapter = ListPropertyAdapter {
-            //Au click nous transmettons au repository (currentPropertyRepository) via le viewmodel l'id de l'item sur lequel l'utilisateur à cliqué
-            //Cet id sera récupéré par le detailFragment via son viewmodel dans le currentPropertyRepository
             viewModel.onItemClicked(it)
-//            viewModel.onItemClickedFlow(it)
         }
         recyclerView.adapter = adapter
-
-        viewModel.propertyListFilterLiveData.observe(viewLifecycleOwner){
+        viewModel.propertyListFilterLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-
     }
 
     override fun onDestroyView() {

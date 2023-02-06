@@ -12,8 +12,6 @@ import kotlin.math.roundToInt
  */
 internal object Utils {
 
-
-
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
@@ -41,7 +39,6 @@ internal object Utils {
             val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
             return dateFormat.format(Date())
         }
-
 
     /**
      * Vérification de la connexion réseau

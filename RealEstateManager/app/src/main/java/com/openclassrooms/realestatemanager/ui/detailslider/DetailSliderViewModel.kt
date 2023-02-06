@@ -1,6 +1,9 @@
 package com.openclassrooms.realestatemanager.ui.detailslider
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import com.openclassrooms.realestatemanager.data.repositories.CurrentPropertyRepository
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,17 +14,17 @@ import javax.inject.Inject
 class DetailSliderViewModel @Inject constructor(
     propertyRepository: PropertyRepository,
     currentPropertyRepository: CurrentPropertyRepository
-) : ViewModel(){
+) : ViewModel() {
 
-    var detailLiveData : LiveData<DetailSliderViewState> =
+    var detailLiveData: LiveData<DetailSliderViewState> =
         currentPropertyRepository.currentIdLiveData.switchMap { id ->
             propertyRepository.getAllPicturesOfThisProperty(id).map {
-                 DetailSliderViewState(it)
+                DetailSliderViewState(it)
             }.asLiveData()
         }
 
     init {
-        if(currentPropertyRepository.currentIdLiveData.value == null) {
+        if (currentPropertyRepository.currentIdLiveData.value == null) {
             detailLiveData = propertyRepository.getAllPicturesOfThisProperty(1).map {
                 DetailSliderViewState(it)
             }.asLiveData()

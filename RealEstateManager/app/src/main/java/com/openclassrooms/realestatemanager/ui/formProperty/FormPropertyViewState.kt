@@ -38,8 +38,7 @@ data class FormPropertyViewState(
     val latLngError: String?
 ) {
     data class ChipPoiViewState(
-        val poiId: Int,
-        val isSelected: Boolean
+        val poiId: Int, val isSelected: Boolean
     )
 }
 

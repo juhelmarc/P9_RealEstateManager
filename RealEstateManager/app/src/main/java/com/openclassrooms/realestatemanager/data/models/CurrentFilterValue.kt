@@ -1,9 +1,6 @@
 package com.openclassrooms.realestatemanager.data.models
 
-import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
-
-
-data class CurrentFilterValue (
+data class CurrentFilterValue(
     val minPriceSelected: Int?,
     val maxPriceSelected: Int?,
     val minSurfaceSelected: Int?,

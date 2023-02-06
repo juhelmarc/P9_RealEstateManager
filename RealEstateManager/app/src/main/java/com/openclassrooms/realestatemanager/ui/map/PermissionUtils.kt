@@ -25,7 +25,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
-import com.openclassrooms.realestatemanager.R
 
 /**
  * Utility class for access to runtime permissions.

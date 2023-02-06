@@ -1,11 +1,11 @@
 package com.openclassrooms.realestatemanager.data.models.entities
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.ForeignKey;
 
 
 @Entity
-data class AgentEntity (
+data class AgentEntity(
     @PrimaryKey(autoGenerate = true) val agentId: Long = 0L,
     val name: String,
 ) {

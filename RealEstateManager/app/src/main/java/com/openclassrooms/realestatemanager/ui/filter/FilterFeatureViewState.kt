@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.ui.filter
 
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
 
-data class FilterFeatureViewState (
+data class FilterFeatureViewState(
     val minPrice: Int,
     val maxPrice: Int,
     val minSurface: Int,
@@ -17,6 +17,5 @@ data class FilterFeatureViewState (
     val agentNameSelected: String?,
     val listOfTypeSelected: List<String>,
     val listOfTownSelected: List<String>,
-
-    )
+)
 

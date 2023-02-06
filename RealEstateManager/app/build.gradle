@@ -60,11 +60,14 @@ dependencies {
     implementation 'androidx.camera:camera-core:1.0.2'
     implementation 'androidx.camera:camera-lifecycle:1.0.2'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
+    testImplementation 'junit:junit:4.12'
     kapt "com.google.dagger:hilt-compiler:2.38.1"
 
+    androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
     //Slider
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
 
@@ -91,6 +94,27 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     //Notification
     implementation 'androidx.core:core-ktx:1.9.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:rules:1.3.0'
+    testImplementation 'androidx.test:runner:1.3.0'
+    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation 'androidx.test:core'
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    //Mock
+    testImplementation "org.mockito:mockito-core:3.11.2"
+    testImplementation "org.mockito:mockito-inline:3.11.2"
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0', {
+        exclude group: 'org.mockito', module: 'mockito-core'
+    }
 }
 //to be removed when switch to KSP
 kapt {

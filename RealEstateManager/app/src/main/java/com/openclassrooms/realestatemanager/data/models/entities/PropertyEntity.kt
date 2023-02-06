@@ -1,22 +1,10 @@
 package com.openclassrooms.realestatemanager.data.models.entities
 
-import androidx.room.*
-import com.openclassrooms.realestatemanager.data.Converters
-
-//Pour ajouter la relation clé-étrangère / clé-primaire à "la main"
-//@Entity(foreignKeys = @ForeignKey(entity = Agent.class,
-//        parentColumns = "id",
-//        childColumns = "agentId"))
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity
-//    (foreignKeys = [ForeignKey(entity = AgentEntity::class,
-//    parentColumns = arrayOf("agentId"),
-//    childColumns = arrayOf("agentId" ))])
-
 data class PropertyEntity(
-    // pour inclure la classe Agent directement dans Property sans se soucier des clés étrangère.
-    // Elle va ajouter automatiquement les champs de notre classe User dans Item et ainsi créer un relation
-    // le prefix agent_ est obligatoire pour que ne nous ayons pas deux champs nommé id
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     var agentId: Long,
     var agentName: String,
@@ -38,7 +26,4 @@ data class PropertyEntity(
     val poiSelected: List<Int>,
     val lat: Double?,
     val lng: Double?,
-
-//Ajouter ce champs dans le cas de l'utilisation de foreignKeys (plus haut)
-//    val agentId: String
 )

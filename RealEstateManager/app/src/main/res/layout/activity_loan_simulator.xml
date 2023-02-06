@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_detail">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/loan_simulator_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="Loan Simulator"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/borrow_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginTop="@dimen/margin_top_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loan_simulator_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:endIconMode="clear_text"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/borrow_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Amount to borrow"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_interest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:valueFrom="0.00"
+            android:valueTo="10.00"
+            app:layout_constraintTop_toBottomOf="@id/borrow_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/interest_layout"
+            android:contentDescription="sliderInterest"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/interest_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            app:endIconMode="clear_text"
+            app:layout_constraintBottom_toBottomOf="@+id/slider_interest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/slider_interest"
+            app:layout_constraintTop_toTopOf="@+id/slider_interest">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/interest_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:valueFrom="1"
+            android:valueTo="30"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/interest_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/duration_layout"
+            android:contentDescription="sliderDuration"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/duration_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            app:endIconMode="clear_text"
+            app:layout_constraintBottom_toBottomOf="@+id/slider_duration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/slider_duration"
+            app:layout_constraintTop_toTopOf="@+id/slider_duration">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/duration_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/personal_contribution_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginTop="@dimen/margin_top_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/slider_duration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:endIconMode="clear_text"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/personal_contribution_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Personal contribution"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@id/personal_contribution_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/purple"
+                android:padding="8dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/monthly_repayment_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="Your monthly repayment is :"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/monthly_repayment_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/monthly_repayment_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/monthly_repayment_text"
+                    tools:text=" 1250 $"
+                    android:gravity="end"/>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/monthly_repayment_text"
+                    app:layout_constraintBottom_toTopOf="@+id/total_interest_cost_text"
+                    app:dividerColor="@color/white"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_interest_cost_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="The total cost of interest is :"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_interest_cost_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/total_interest_cost_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/total_interest_cost_text"
+                    tools:text=" 30500 $" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/total_interest_cost_text"
+                    app:layout_constraintBottom_toTopOf="@+id/total_loan_text"
+                    app:dividerColor="@color/white"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_loan_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="The total loan amount is :"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_borrow_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/total_loan_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/total_loan_text"
+                    tools:text=" 255000 $"
+
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/borrowing_capacity_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/card_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:padding="8dp"
+            android:gravity="center"
+            android:text="Borrowing capacity simulator"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/income_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            android:layout_marginTop="@dimen/margin_top_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/borrowing_capacity_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:endIconMode="clear_text"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/income_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Your total income"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_duration_borrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:valueFrom="1"
+            android:valueTo="30"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/income_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/duration_barrow_layout"
+            android:contentDescription="sliderDuration"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/duration_barrow_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_start_add"
+            app:endIconMode="clear_text"
+            app:layout_constraintBottom_toBottomOf="@+id/slider_duration_borrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/slider_duration_borrow"
+            app:layout_constraintTop_toTopOf="@+id/slider_duration_borrow">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/duration_borrow_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_borrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            app:layout_constraintTop_toBottomOf="@id/duration_barrow_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/purple"
+                android:padding="8dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/monthly_repayment_capacity_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="Your monthly indebtedness is :"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/monthly_repayment_capacity_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/monthly_repayment_capacity_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/monthly_repayment_capacity_text"
+                    tools:text=" 1250 $"
+                    android:gravity="end"/>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/monthly_repayment_capacity_text"
+                    app:layout_constraintBottom_toTopOf="@+id/total_amount_loan_with_interest_text"
+                    app:dividerColor="@color/white"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_amount_loan_with_interest_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider3"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="Your total borrowing capacity :"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_amount_loan_with_interest_value"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/total_amount_loan_with_interest_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/total_amount_loan_with_interest_text"
+                    tools:text=" 30500 $" />
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

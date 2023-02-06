@@ -3,8 +3,6 @@ package com.openclassrooms.realestatemanager.ui.detailslider
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.openclassrooms.realestatemanager.databinding.ActivitySliderDetailBinding
-
-import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,7 +14,7 @@ class DetailSliderActivity : AppCompatActivity() {
         val binding = ActivitySliderDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.sliderContainerDetail.id, DetailSliderFragment())
                 .commitNow()

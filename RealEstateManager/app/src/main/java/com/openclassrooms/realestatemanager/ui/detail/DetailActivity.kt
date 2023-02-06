@@ -11,37 +11,47 @@ import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
 import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyActivity
+import com.openclassrooms.realestatemanager.ui.simulator.LoanSimulatorActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailActivity: AppCompatActivity() {
+class DetailActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<DetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.secondContainerDetail.id, DetailFragment())
                 .commitNow()
         }
+
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.detail_menu, menu)
             }
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
-                R.id.edit_current_property_detail -> {
-                    viewModel.setIsAnUpdate(true)
-                    startActivity(Intent(this@DetailActivity, FormPropertyActivity::class.java))
-                    true
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    R.id.borrow -> {
+                        startActivity(
+                            Intent(
+                                this@DetailActivity,
+                                LoanSimulatorActivity::class.java
+                            )
+                        )
+                        true
+                    }
+                    R.id.edit_current_property_detail -> {
+                        viewModel.setIsAnUpdate(true)
+                        startActivity(Intent(this@DetailActivity, FormPropertyActivity::class.java))
+                        true
+                    }
+                    else -> false
                 }
-                else -> false
-            }
         })
     }
 }

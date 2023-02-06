@@ -3,13 +3,12 @@ package com.openclassrooms.realestatemanager.ui.detail
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import com.openclassrooms.realestatemanager.databinding.ItemDetailBinding
-
 
 
 class DetailAdapter(
@@ -24,10 +23,10 @@ class DetailAdapter(
         holder.bind(getItem(position), onItemClicked)
     }
 
-    class MyViewHolder(private val binding: ItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
+    class MyViewHolder(private val binding: ItemDetailBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PropertyPictureEntity, onItemClicked: ((String) -> Unit)?) {
-//            binding.description.text = item.title
             binding.propertyPicture.load(item.url)
             binding.item.setOnClickListener {
                 onItemClicked?.invoke(item.url)
@@ -37,12 +36,18 @@ class DetailAdapter(
 
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<PropertyPictureEntity>() {
-            override fun areItemsTheSame(oldItem: PropertyPictureEntity, newItem: PropertyPictureEntity): Boolean {
+            override fun areItemsTheSame(
+                oldItem: PropertyPictureEntity,
+                newItem: PropertyPictureEntity
+            ): Boolean {
                 return (oldItem == newItem)
             }
 
             @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: PropertyPictureEntity, newItem: PropertyPictureEntity): Boolean {
+            override fun areContentsTheSame(
+                oldItem: PropertyPictureEntity,
+                newItem: PropertyPictureEntity
+            ): Boolean {
                 return oldItem == newItem
             }
         }

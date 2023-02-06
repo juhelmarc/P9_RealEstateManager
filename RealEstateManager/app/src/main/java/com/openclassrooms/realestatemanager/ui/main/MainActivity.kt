@@ -14,12 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
-import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailActivity
 import com.openclassrooms.realestatemanager.ui.detail.DetailFragment
 import com.openclassrooms.realestatemanager.ui.filter.FilterActivity
+import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyActivity
 import com.openclassrooms.realestatemanager.ui.list.ListFragment
 import com.openclassrooms.realestatemanager.ui.map.MapsActivity
+import com.openclassrooms.realestatemanager.ui.simulator.LoanSimulatorActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,50 +28,47 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
 
-    private val CHANNEL_ID = "ChannelId"
-
-    override fun onCreate(saveInstanceState : Bundle?) {
+    override fun onCreate(saveInstanceState: Bundle?) {
         super.onCreate(saveInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.setCurrentPropertyId(0L)
-        //Ouvrir une nouvelle activité, Startavctivityforresult,
-        //créer un model avec les filtres, la vue peux retourner une custom request (string) (sur room définir des custom request)
-        //qui retourne un résultat et la vue mainActivité récupère la custom request la lance dans room
-        //SupportSQLiteQuery
         createNotificationChannel()
-
-
-        //Si l'activité n'est pas en pause -> ajout du listFragment dans le frameLayout
-        if(saveInstanceState == null){
+        if (saveInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.containerList.id, ListFragment())
-                    .commitNow()
-
+                .commitNow()
         }
-        // Si la vue du frameLayout containerDetail est différent de null donc visible c'est à dire que l'appareil une tablet
-        // Et si le fragment DetailFragment est égale à null donc n'est pas présent dans la main activité ->
-        // on l'ajoute dans le frameLayout containerDetail
-        if(binding.containerDetail != null && supportFragmentManager.findFragmentById(binding.containerDetail.id) == null) {
+        if (binding.containerDetail != null && supportFragmentManager.findFragmentById(binding.containerDetail.id) == null) {
             supportFragmentManager.beginTransaction()
                 .add(
                     binding.containerDetail.id,
-                    DetailFragment())
+                    DetailFragment()
+                )
                 .commitNow()
 
         }
         viewModel.navigateSingleLiveEvent.observe(this) {
-            when(it) {
-                //-> = alors je fais
-                MainViewAction.NavigateToDetailActivity -> startActivity(Intent(this, DetailActivity::class.java))
+            when (it) {
+                MainViewAction.NavigateToDetailActivity -> startActivity(
+                    Intent(
+                        this,
+                        DetailActivity::class.java
+                    )
+                )
             }
         }
 
-        val menuProviderEmptyList: MenuProvider = object: MenuProvider {
+        val menuProviderEmptyList: MenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu_empty_list, menu)
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
+                R.id.borrow -> {
+                    startActivity(Intent(this@MainActivity, LoanSimulatorActivity::class.java))
+                    true
+                }
                 R.id.map -> {
                     startActivity(Intent(this@MainActivity, MapsActivity::class.java))
                     true
@@ -87,18 +85,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.search_off -> {
-//                    viewModel.setQueryFilter("", false)
                     viewModel.deleteCurrentFilter()
                     true
                 }
                 else -> false
             }
         }
-        val menuProvider: MenuProvider = object: MenuProvider {
+
+        val menuProvider: MenuProvider = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_menu, menu)
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
+                R.id.borrow -> {
+                    startActivity(Intent(this@MainActivity, LoanSimulatorActivity::class.java))
+                    true
+                }
                 R.id.map -> {
                     startActivity(Intent(this@MainActivity, MapsActivity::class.java))
                     true
@@ -120,20 +123,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.search_off -> {
-//                    viewModel.setQueryFilter("", false)
                     viewModel.deleteCurrentFilter()
                     true
                 }
                 else -> false
-
             }
         }
-
 
         viewModel.listPropertyLiveData.observe(this) { listProperty ->
             removeMenuProvider(menuProvider)
             removeMenuProvider(menuProviderEmptyList)
-            if(listProperty.isEmpty()) {
+            if (listProperty.isEmpty()) {
                 removeMenuProvider(menuProvider)
                 addMenuProvider(menuProviderEmptyList)
             } else {
@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -163,6 +164,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         viewModel.onConfigurationChanged(resources.getBoolean(R.bool.isTablet))
 
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "ChannelId"
     }
 
 }
