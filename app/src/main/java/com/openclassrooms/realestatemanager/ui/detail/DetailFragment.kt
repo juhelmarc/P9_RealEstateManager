@@ -53,7 +53,7 @@ class DetailFragment : Fragment() {
             startActivity(Intent(context, DetailSliderActivity::class.java))
         }
 
-        viewModel.detailLiveData.observe(viewLifecycleOwner) { viewState ->
+        viewModel.getDetailLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is DetailViewState.Selected -> {
                     binding.descriptionText.text = viewState.description

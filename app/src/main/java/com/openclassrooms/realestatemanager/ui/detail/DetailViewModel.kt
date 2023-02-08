@@ -14,12 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val propertyRepository: PropertyRepository,
-    private val currentPropertyRepository: CurrentPropertyRepository,
+    private val propertyRepository: PropertyRepository
 ) : ViewModel() {
 
-    val detailLiveData: LiveData<DetailViewState> =
-        propertyRepository.getCurrentIdLiveData().switchMap { id ->
+    fun getDetailLiveData() : LiveData<DetailViewState> {
+       return propertyRepository.getCurrentIdLiveData().switchMap { id ->
             if (id != 0L) {
                 combine(
                     propertyRepository.getPropertyByIdFlow(id),
@@ -64,6 +63,8 @@ class DetailViewModel @Inject constructor(
                 }.asLiveData()
             }
         }
+    }
+
 
     fun setIsAnUpdate(isAnUpdate: Boolean) {
         propertyRepository.setIsAnUpdateProperty(isAnUpdate)

@@ -14,5 +14,4 @@ enum class PoiList(val poiId: Int) {
     CULTURAL_ATTRACTIONS(R.string.poi_cultural_attractions),
     SPORTS_FACILITIES(R.string.poi_sports_facilities),
     MEDICAL_FACILITIES(R.string.poi_medical_facilities)
-
 }
