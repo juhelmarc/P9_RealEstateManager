@@ -12,24 +12,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailSliderViewModel @Inject constructor(
-    propertyRepository: PropertyRepository,
-    currentPropertyRepository: CurrentPropertyRepository
+    private val propertyRepository: PropertyRepository,
+    private val currentPropertyRepository: CurrentPropertyRepository
 ) : ViewModel() {
 
-    var detailLiveData: LiveData<DetailSliderViewState> =
-        currentPropertyRepository.currentIdLiveData.switchMap { id ->
-            propertyRepository.getAllPicturesOfThisProperty(id).map {
-                DetailSliderViewState(it)
-            }.asLiveData()
-        }
-
-    init {
-        if (currentPropertyRepository.currentIdLiveData.value == null) {
-            detailLiveData = propertyRepository.getAllPicturesOfThisProperty(1).map {
-                DetailSliderViewState(it)
-            }.asLiveData()
-        }
+    fun getDetailSlider() : LiveData<DetailSliderViewState> {
+        val detailSliderLiveData: LiveData<DetailSliderViewState> =
+            if (currentPropertyRepository.currentIdLiveData.value != null) {
+                currentPropertyRepository.currentIdLiveData.switchMap { id ->
+                    propertyRepository.getAllPicturesOfThisProperty(id).map {
+                        DetailSliderViewState(it)
+                    }.asLiveData()
+                }
+            } else {
+                propertyRepository.getAllPicturesOfThisProperty(1).map {
+                    DetailSliderViewState(it)
+                }.asLiveData()
+            }
+        return detailSliderLiveData
     }
+
 
 
 }

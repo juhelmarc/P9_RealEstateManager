@@ -16,33 +16,35 @@ class FilterViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository
 ) : ViewModel() {
 
-    val filterFeatureViewStateLiveData: LiveData<FilterFeatureViewState> = combine(
-        propertyRepository.getMinMaxPriceAndSurface(),
-        propertyRepository.getAllAgent(),
-        propertyRepository.getListType(),
-        propertyRepository.getListTown(),
-        propertyRepository.getCurrentFilterValue(),
-    ) { minMaxPriceSurface, listAgent, listType, listTown, currentFilterValue ->
-        FilterFeatureViewState(
-            minPrice = minMaxPriceSurface.minPrice,
-            maxPrice = minMaxPriceSurface.maxPrice,
-            minSurface = minMaxPriceSurface.minSurface,
-            maxSurface = minMaxPriceSurface.maxSurface,
-            listAgent = listAgent,
-            listOfType = listType,
-            listOfTown = listTown,
-            minPriceSelected = if (currentFilterValue.minPriceSelected != null && currentFilterValue.minPriceSelected >= minMaxPriceSurface.minPrice) currentFilterValue.minPriceSelected else minMaxPriceSurface.minPrice,
-            maxPriceSelected = if (currentFilterValue.maxPriceSelected != null && currentFilterValue.maxPriceSelected <= minMaxPriceSurface.maxPrice) currentFilterValue.maxPriceSelected else minMaxPriceSurface.maxPrice,
-            minSurfaceSelected = if (currentFilterValue.minSurfaceSelected != null && currentFilterValue.minSurfaceSelected >= minMaxPriceSurface.minSurface) currentFilterValue.minSurfaceSelected else minMaxPriceSurface.minSurface,
-            maxSurfaceSelected = if (currentFilterValue.maxSurfaceSelected != null && currentFilterValue.maxSurfaceSelected <= minMaxPriceSurface.maxSurface) currentFilterValue.maxSurfaceSelected else minMaxPriceSurface.maxSurface,
-            agentNameSelected = currentFilterValue.agentNameSelected,
-            listOfTypeSelected = currentFilterValue.listOfTypeSelected,
-            listOfTownSelected = currentFilterValue.listOfTownSelected,
-        )
-    }.asLiveData()
+    fun getFilterFeatureViewStateLiveData() : LiveData<FilterFeatureViewState> {
+       return combine(
+            propertyRepository.getMinMaxPriceAndSurface(),
+            propertyRepository.getAllAgent(),
+            propertyRepository.getListType(),
+            propertyRepository.getListTown(),
+            propertyRepository.getCurrentFilterValue(),
+        ) { minMaxPriceSurface, listAgent, listType, listTown, currentFilterValue ->
+            FilterFeatureViewState(
+                minPrice = minMaxPriceSurface.minPrice,
+                maxPrice = minMaxPriceSurface.maxPrice,
+                minSurface = minMaxPriceSurface.minSurface,
+                maxSurface = minMaxPriceSurface.maxSurface,
+                listAgent = listAgent,
+                listOfType = listType,
+                listOfTown = listTown,
+                minPriceSelected = if (currentFilterValue.minPriceSelected != null && currentFilterValue.minPriceSelected >= minMaxPriceSurface.minPrice) currentFilterValue.minPriceSelected else minMaxPriceSurface.minPrice,
+                maxPriceSelected = if (currentFilterValue.maxPriceSelected != null && currentFilterValue.maxPriceSelected <= minMaxPriceSurface.maxPrice) currentFilterValue.maxPriceSelected else minMaxPriceSurface.maxPrice,
+                minSurfaceSelected = if (currentFilterValue.minSurfaceSelected != null && currentFilterValue.minSurfaceSelected >= minMaxPriceSurface.minSurface) currentFilterValue.minSurfaceSelected else minMaxPriceSurface.minSurface,
+                maxSurfaceSelected = if (currentFilterValue.maxSurfaceSelected != null && currentFilterValue.maxSurfaceSelected <= minMaxPriceSurface.maxSurface) currentFilterValue.maxSurfaceSelected else minMaxPriceSurface.maxSurface,
+                agentNameSelected = currentFilterValue.agentNameSelected,
+                listOfTypeSelected = currentFilterValue.listOfTypeSelected,
+                listOfTownSelected = currentFilterValue.listOfTownSelected,
+            )
+        }.asLiveData()
+    }
 
 
-    fun registerCurrentFilterValueAndQuery(filterFeatureViewState: FilterFeatureViewState) {
+    fun registerCurrentFilterValue(filterFeatureViewState: FilterFeatureViewState) {
         val currentFilterValue = CurrentFilterValue(
             minPriceSelected = filterFeatureViewState.minPriceSelected,
             maxPriceSelected = filterFeatureViewState.maxPriceSelected,
@@ -62,7 +64,7 @@ class FilterViewModel @Inject constructor(
         propertyRepository.registerFilterQueryWhenSubmitButtonClicked(query)
     }
 
-    private fun getSavedCurrentFilter(): FilterFeatureViewState {
+     fun getSavedCurrentFilter(): FilterFeatureViewState {
         return savedCurrentFilterValueMutableLiveData.value!!
     }
 
@@ -74,31 +76,31 @@ class FilterViewModel @Inject constructor(
         return propertyRepository.getAllPropertyFilter(query).asLiveData()
     }
 
-    fun updateQueryFilterPrice(minPriceSelected: Int, maxPriceSelected: Int) {
-        registerCurrentFilterValueAndQuery(
+    fun updateFilterPrice(minPriceSelected: Int, maxPriceSelected: Int) {
+        registerCurrentFilterValue(
             getSavedCurrentFilter().copy(
                 minPriceSelected = minPriceSelected, maxPriceSelected = maxPriceSelected
             )
         )
     }
 
-    fun updateQueryFilterSurface(minSurfaceSelected: Int, maxSurfaceSelected: Int) {
-        registerCurrentFilterValueAndQuery(
+    fun updateFilterSurface(minSurfaceSelected: Int, maxSurfaceSelected: Int) {
+        registerCurrentFilterValue(
             getSavedCurrentFilter().copy(
                 minSurfaceSelected = minSurfaceSelected, maxSurfaceSelected = maxSurfaceSelected
             )
         )
     }
 
-    fun updateQueryFilterAgent(agentName: String) {
+    fun updateFilterAgent(agentName: String) {
         if (agentName == "") {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     agentNameSelected = ""
                 )
             )
         } else {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     agentNameSelected = agentName
                 )
@@ -106,15 +108,15 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    fun updateQueryFilterListType(listOfTypeSelected: List<String>) {
+    fun updateFilterListType(listOfTypeSelected: List<String>) {
         if (listOfTypeSelected.isNotEmpty()) {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     listOfTypeSelected = listOfTypeSelected
                 )
             )
         } else {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     listOfTypeSelected = listOf()
                 )
@@ -122,15 +124,15 @@ class FilterViewModel @Inject constructor(
         }
     }
 
-    fun updateQueryFilterListTown(listOfTownSelected: List<String>) {
+    fun updateFilterListTown(listOfTownSelected: List<String>) {
         if (listOfTownSelected.isNotEmpty()) {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     listOfTownSelected = listOfTownSelected
                 )
             )
         } else {
-            registerCurrentFilterValueAndQuery(
+            registerCurrentFilterValue(
                 getSavedCurrentFilter().copy(
                     listOfTownSelected = listOf()
                 )

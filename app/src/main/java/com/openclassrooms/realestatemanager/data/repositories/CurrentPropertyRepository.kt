@@ -13,6 +13,7 @@ class CurrentPropertyRepository @Inject constructor() {
 
     val currentIdLiveData: LiveData<Long> = currentIdMutableLiveData
 
+
     @MainThread
     fun setCurrentId(currentId: Long) {
         currentIdMutableLiveData.value = currentId

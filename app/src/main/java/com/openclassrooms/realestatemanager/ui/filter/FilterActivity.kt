@@ -28,8 +28,8 @@ class FilterActivity : AppCompatActivity() {
         val rangeSliderPrice = binding.filterPrice
         val rangeSliderSurface = binding.filterSurface
 
-        viewModel.filterFeatureViewStateLiveData.observe(this) { filterFeatureViewState ->
-            viewModel.registerCurrentFilterValueAndQuery(filterFeatureViewState)
+        viewModel.getFilterFeatureViewStateLiveData().observe(this) { filterFeatureViewState ->
+            viewModel.registerCurrentFilterValue(filterFeatureViewState)
             if (filterFeatureViewState.minPrice != filterFeatureViewState.maxPrice) {
                 rangeSliderPrice.isEnabled = true
                 rangeSliderPrice.setBackgroundColor(getColor(R.color.white))
@@ -88,7 +88,7 @@ class FilterActivity : AppCompatActivity() {
                         Toast.makeText(this, "No property found, change filter", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        viewModel.registerCurrentFilterValueAndQuery(filterFeatureViewState)
+                        viewModel.registerCurrentFilterValue(filterFeatureViewState)
                         viewModel.registerFilterQueryWhenSubmitButtonClicked(query)
                         finish()
                     }
@@ -100,7 +100,7 @@ class FilterActivity : AppCompatActivity() {
             }
             //AgentList
             binding.agentInput.setOnItemClickListener { parent, _, position, _ ->
-                viewModel.updateQueryFilterAgent(parent.getItemAtPosition(position).toString())
+                viewModel.updateFilterAgent(parent.getItemAtPosition(position).toString())
             }
 
             val listAgent = mutableListOf<AgentEntity>()
@@ -175,7 +175,7 @@ class FilterActivity : AppCompatActivity() {
                         }
                     }
                     binding.textViewType.text = typeStringBuilder
-                    viewModel.updateQueryFilterListType(listTypeSelected)
+                    viewModel.updateFilterListType(listTypeSelected)
                 })
                 builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
                     dialog.dismiss()
@@ -186,7 +186,7 @@ class FilterActivity : AppCompatActivity() {
                         listTypeSelected.clear()
                     }
                     binding.textViewType.text = ""
-                    viewModel.updateQueryFilterListType(listTypeSelected)
+                    viewModel.updateFilterListType(listTypeSelected)
                 })
                 builder.show()
             }
@@ -244,7 +244,7 @@ class FilterActivity : AppCompatActivity() {
                         }
                     }
                     binding.textViewTown.text = townStringBuilder
-                    viewModel.updateQueryFilterListTown(listTownSelected)
+                    viewModel.updateFilterListTown(listTownSelected)
                 })
                 builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
                     dialog.dismiss()
@@ -255,7 +255,7 @@ class FilterActivity : AppCompatActivity() {
                         listTownSelected.clear()
                     }
                     binding.textViewTown.text = ""
-                    viewModel.updateQueryFilterListTown(listOf())
+                    viewModel.updateFilterListTown(listOf())
                 })
                 builder.show()
             }
@@ -285,7 +285,7 @@ class FilterActivity : AppCompatActivity() {
         })
         rangeSliderPrice.addOnChangeListener { rangeSlider, _, _ ->
             // Responds to when slider's value is changed
-            viewModel.updateQueryFilterPrice(
+            viewModel.updateFilterPrice(
                 rangeSlider.values[0].toInt(),
                 rangeSlider.values[1].toInt()
             )
@@ -303,7 +303,7 @@ class FilterActivity : AppCompatActivity() {
         })
         rangeSliderSurface.addOnChangeListener { rangeSlider, _, _ ->
             // Responds to when slider's value is changed
-            viewModel.updateQueryFilterSurface(
+            viewModel.updateFilterSurface(
                 rangeSlider.values[0].toInt(),
                 rangeSlider.values[1].toInt()
             )

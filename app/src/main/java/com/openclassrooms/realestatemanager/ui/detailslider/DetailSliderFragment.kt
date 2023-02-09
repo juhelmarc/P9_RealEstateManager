@@ -30,7 +30,7 @@ class DetailSliderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.detailLiveData.observe(viewLifecycleOwner) {
+        viewModel.getDetailSlider().observe(viewLifecycleOwner) {
             if (it.listPicture != null) {
                 var slideModelList: MutableList<SlideModel> = mutableListOf<SlideModel>()
                 for (propertyPicture in it.listPicture) {
