@@ -16,8 +16,8 @@ class MapsViewModel @Inject constructor(
     private val currentPropertyRepository: CurrentPropertyRepository
 ) : ViewModel() {
 
-    val mapsViewStateListLiveData: LiveData<List<MapsViewState>> =
-        propertyRepository.getQueryFilter().switchMap { query ->
+    fun getMapsViewStateListLiveData() : LiveData<List<MapsViewState>> {
+       return propertyRepository.getQueryFilter().switchMap { query ->
             propertyRepository.getAllPropertyFilter(query).map { listFilterProperty ->
                 listFilterProperty.map { property ->
                     MapsViewState(
@@ -32,6 +32,7 @@ class MapsViewModel @Inject constructor(
                 }
             }.asLiveData()
         }
+    }
 
     fun onItemMarkerClick(id: Long) {
         currentPropertyRepository.setCurrentId(id)

@@ -81,7 +81,6 @@ class FilterViewModelTest {
         val expectedFilterViewState = FilterFixtures.FilterFeatureUtils.create()
         val expectedFilterValue = currentFilterValue
 
-
         viewModel.registerCurrentFilterValue(expectedFilterViewState)
 
         verify(propertyRepository).registerCurrentFilterValue(expectedFilterValue)

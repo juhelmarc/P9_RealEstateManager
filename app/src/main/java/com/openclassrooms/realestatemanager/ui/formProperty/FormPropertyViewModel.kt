@@ -21,14 +21,20 @@ class FormPropertyViewModel @Inject constructor(
 
     private val messageError = "Is mandatory"
 
-    val agentListLiveData: LiveData<List<AgentEntity>> =
-        propertyRepository.getAllAgent().asLiveData()
 
-    val isAnUpdate: Boolean =
-        propertyRepository.getIsAnUpdatePropertyLiveData().value!!
 
-    val initialViewStateLiveData: LiveData<FormPropertyViewState> =
-        propertyRepository.getCurrentIdLiveData().switchMap { id ->
+    fun getAgentListLiveData() : LiveData<List<AgentEntity>> {
+        return propertyRepository.getAllAgent().asLiveData()
+    }
+
+
+    fun getIsAnUpdate() : Boolean  {
+      return  propertyRepository.getIsAnUpdatePropertyLiveData().value!!
+    }
+
+
+    fun getInitialViewStateLiveData(): LiveData<FormPropertyViewState> {
+      return  propertyRepository.getCurrentIdLiveData().switchMap { id ->
             propertyRepository.getIsAnUpdatePropertyLiveData().switchMap { isAnUpdate ->
                 if (isAnUpdate) {
                     combine(
@@ -86,6 +92,8 @@ class FormPropertyViewModel @Inject constructor(
                 }
             }
         }
+    }
+
 
     private val viewStateEmpty = FormPropertyViewState(
         0L,
@@ -131,7 +139,7 @@ class FormPropertyViewModel @Inject constructor(
         mutableStateFlowViewState.value = formPropertyViewState
     }
 
-    private fun getPropertyViewState(): FormPropertyViewState {
+     fun getPropertyViewState(): FormPropertyViewState {
         return mutableStateFlowViewState.value
     }
 
@@ -141,8 +149,10 @@ class FormPropertyViewModel @Inject constructor(
 
     private val mutableStateFlowViewState = MutableStateFlow(viewStateEmpty)
 
-    val viewStateLiveData: LiveData<FormPropertyViewState> =
-        mutableStateFlowViewState.asLiveData()
+    fun getViewStateLiveData(): LiveData<FormPropertyViewState>  {
+        return mutableStateFlowViewState.asLiveData()
+    }
+
 
     fun onSubmitButtonClicked(): Boolean {
         if (checkError()) {
@@ -249,7 +259,7 @@ class FormPropertyViewModel @Inject constructor(
     }
 
 
-    private fun updatePropertyEntity(formPropertyViewState: FormPropertyViewState) =
+     private fun updatePropertyEntity(formPropertyViewState: FormPropertyViewState) =
         viewModelScope.launch {
             val listPoiSelected = mutableListOf<Int>()
             formPropertyViewState.listPoiSelectedOrNot.forEach { poi ->

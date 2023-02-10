@@ -36,7 +36,7 @@ class FormPropertyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityFormPropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.initialViewStateLiveData.observe(this) {
+        viewModel.getInitialViewStateLiveData().observe(this) {
             viewModel.setInitialViewState(it)
         }
         //Entry date picker
@@ -181,7 +181,7 @@ class FormPropertyActivity : AppCompatActivity() {
         binding.agentInput.setOnItemClickListener { parent, _, position, _ ->
             viewModel.updateAgent(parent.getItemAtPosition(position) as AgentEntity)
         }
-        viewModel.agentListLiveData.observe(this) { agentList ->
+        viewModel.getAgentListLiveData().observe(this) { agentList ->
             binding.agentInput.setAdapter(
                 ArrayAdapter(
                     this,
@@ -191,7 +191,7 @@ class FormPropertyActivity : AppCompatActivity() {
             )
         }
         //Set data to view
-        viewModel.viewStateLiveData.observe(this) { formPropertyViewState ->
+        viewModel.getViewStateLiveData().observe(this) { formPropertyViewState ->
 
             val surface = formPropertyViewState.surface ?: 0
             val price = formPropertyViewState.price ?: 0
@@ -238,7 +238,7 @@ class FormPropertyActivity : AppCompatActivity() {
         binding.submitButton.setOnClickListener {
             binding.poiList.requestFocus()
             if (viewModel.onSubmitButtonClicked()) {
-                if (!viewModel.isAnUpdate) {
+                if (!viewModel.getIsAnUpdate()) {
                     val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_add_home_work_24)
                         .setContentTitle("Property :")
@@ -258,7 +258,7 @@ class FormPropertyActivity : AppCompatActivity() {
                 binding.postalCodeInput.clearFocus()
                 binding.townInput.clearFocus()
                 binding.agentInput.clearFocus()
-                viewModel.viewStateLiveData.observe(this) { viewState ->
+                viewModel.getViewStateLiveData().observe(this) { viewState ->
                     val error: String =
                         viewState.pictureError
                             ?: (viewState.addressError

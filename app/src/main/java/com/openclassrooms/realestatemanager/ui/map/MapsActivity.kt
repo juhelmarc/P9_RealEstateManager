@@ -54,7 +54,7 @@ class MapsActivity : AppCompatActivity(),
         googleMap.setOnMyLocationClickListener(this)
         enableMyLocation()
 
-        viewModel.mapsViewStateListLiveData.observe(this) { listMapsViewState ->
+        viewModel.getMapsViewStateListLiveData().observe(this) { listMapsViewState ->
             addMarkers(googleMap, listMapsViewState)
             map.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -127,7 +127,7 @@ class MapsActivity : AppCompatActivity(),
         }
 
         map.setOnMarkerClickListener { marker ->
-            viewModel.mapsViewStateListLiveData.observe(this) { listMapsViewState ->
+            viewModel.getMapsViewStateListLiveData().observe(this) { listMapsViewState ->
                 listMapsViewState.forEach { viewState ->
                     if (LatLng(viewState.lat!!, viewState.lng!!) == marker.position) {
                         viewModel.onItemMarkerClick(viewState.id)

@@ -22,22 +22,15 @@ class MainViewModel @Inject constructor(
     val navigateSingleLiveEvent = SingleLiveEvent<MainViewAction>()
 
 
-    init {
-        navigateSingleLiveEvent.addSource(currentPropertyRepository.currentIdLiveData) {
-            if (!isTablet) {
-                navigateSingleLiveEvent.setValue(MainViewAction.NavigateToDetailActivity)
-            }
-        }
-    }
-
     fun onConfigurationChanged(isTablet: Boolean) {
         this.isTablet = isTablet
     }
 
-    val listPropertyLiveData: LiveData<List<PropertyEntity>> =
-        propertyRepository.getAllProperty().map { listProperty ->
+    fun getListPropertyLiveData(): LiveData<List<PropertyEntity>> {
+       return propertyRepository.getAllProperty().map { listProperty ->
             listProperty
         }.asLiveData()
+    }
 
     fun setIsAnUpdateProperty(isAnUpdate: Boolean) {
         propertyRepository.setIsAnUpdateProperty(isAnUpdate)
@@ -49,6 +42,14 @@ class MainViewModel @Inject constructor(
 
     fun setCurrentPropertyId(id: Long) {
         propertyRepository.setCurrentPropertyId(id)
+    }
+
+    init {
+        navigateSingleLiveEvent.addSource(currentPropertyRepository.currentIdLiveData) {
+            if (!isTablet) {
+                navigateSingleLiveEvent.setValue(MainViewAction.NavigateToDetailActivity)
+            }
+        }
     }
 
 }

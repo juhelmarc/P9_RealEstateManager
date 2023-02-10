@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.listPropertyLiveData.observe(this) { listProperty ->
+        viewModel.getListPropertyLiveData().observe(this) { listProperty ->
             removeMenuProvider(menuProvider)
             removeMenuProvider(menuProviderEmptyList)
             if (listProperty.isEmpty()) {

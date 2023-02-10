@@ -18,7 +18,7 @@ class ListViewModel @Inject constructor(
     private val currentPropertyRepository: CurrentPropertyRepository
 ) : ViewModel() {
 
-    val propertyListFilterLiveData: LiveData<List<ListViewState>> =
+    fun getPropertyListFilterLiveData(): LiveData<List<ListViewState>> =
         propertyRepository.getQueryFilter().switchMap { query ->
             propertyRepository.getAllPropertyFilter(query).map { listFilterProperty ->
                 listFilterProperty.map {
