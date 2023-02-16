@@ -10,7 +10,7 @@ import coil.load
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import com.openclassrooms.realestatemanager.databinding.ItemDetailBinding
 
-class FormPropertyAdapter() :
+class FormPropertyAdapter :
     ListAdapter<PropertyPictureEntity, FormPropertyAdapter.MyViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(
         ItemDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)

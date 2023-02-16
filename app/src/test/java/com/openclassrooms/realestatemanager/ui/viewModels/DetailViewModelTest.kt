@@ -58,7 +58,6 @@ class DetailViewModelTest {
         detailLiveData.observeForever {  }
         val viewState = detailLiveData.value
 
-
         verify(propertyRepository).getCurrentIdLiveData()
         verify(propertyRepository).getPropertyByIdFlow(any())
         verify(propertyRepository).getAllPicturesOfThisProperty(any())
@@ -85,7 +84,6 @@ class DetailViewModelTest {
         val expectedViewState = detailViewStateEmpty
         whenever(propertyRepository.getCurrentIdLiveData()).thenReturn(MutableLiveData(0L))
         whenever(propertyRepository.getAllProperty()).thenReturn(flowOf(listOf(PropertyFixtures.PropertyEntityUtils.create())))
-
 
         val detailLiveData = viewModel.getDetailLiveData()
         detailLiveData.observeForever {  }

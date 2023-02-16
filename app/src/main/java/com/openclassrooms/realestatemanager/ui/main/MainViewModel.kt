@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val currentPropertyRepository: CurrentPropertyRepository,
+    currentPropertyRepository: CurrentPropertyRepository,
     private val propertyRepository: PropertyRepository,
 ) : ViewModel() {
 

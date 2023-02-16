@@ -1,58 +1,69 @@
 package com.openclassrooms.realestatemanager.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.net.wifi.WifiManager
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.time.Clock
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
-/**
- * Created by Philippe on 21/02/2018.
- */
-internal object Utils {
+
+class Utils @Inject constructor(
+    private val clock: Clock,
+    @ApplicationContext private val context: Context,
+) {
+
+    companion object {
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    }
 
     /**
-     * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
-     * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @param dollars
      * @return
      */
-
-    @JvmStatic
     fun convertDollarToEuro(dollars: Int): Int {
-        return (dollars * 1.02).roundToInt()
+        return (dollars * 0.93).roundToInt()
     }
 
-    @JvmStatic
+
     fun convertEuroToDollar(euro: Int): Int {
-        return (euro * 0.98).roundToInt()
+        return (euro * 1.07).roundToInt()
     }
 
     /**
-     * Conversion de la date d'aujourd'hui en un format plus approprié
-     * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return
      */
     val todayDate: String
+        @RequiresApi(Build.VERSION_CODES.O)
         get() {
-            val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
-            return dateFormat.format(Date())
+            return LocalDate.now(clock).format(dateFormat)
         }
 
     /**
-     * Vérification de la connexion réseau
-     * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param context
      * @return
      */
-    fun isInternetAvailable(context: Context): Boolean {
-        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return wifi.isWifiEnabled
+
+    @SuppressLint("MissingPermission")
+    fun isNetWorkConnected() : Boolean {
+        val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return manager.getNetworkCapabilities(manager.activeNetwork)?.let {
+            it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+            it.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) ||
+            it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+            it.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+        } ?: false
+
     }
-
-    
-
 
 
 }

@@ -26,12 +26,11 @@ class DetailFragment : Fragment() {
     private val viewModel by viewModels<DetailViewModel>()
     private lateinit var adapter: DetailAdapter
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -73,7 +72,7 @@ class DetailFragment : Fragment() {
                                 "&maptype=roadmap" +
                                 "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo"
                     )
-                    binding.staticMap.setBackgroundColor(resources.getColor(R.color.black))
+                    binding.staticMap.setBackgroundColor(resources.getColor(R.color.black, ))
                     binding.emptyListProperty.visibility = View.INVISIBLE
                     if (viewState.entryDate != null && viewState.entryDate != "") {
                         binding.entryDateValue.text =
@@ -92,15 +91,15 @@ class DetailFragment : Fragment() {
                 }
                 is DetailViewState.Empty -> {
                     binding.emptyListProperty.visibility = View.VISIBLE
-                    binding.emptyListProperty.text = "Add your first property"
+                    binding.emptyListProperty.text = getString(R.string.add_your_first_property)
                 }
             }
         }
     }
 
     private fun formatDate(dateMilli: Long): String {
-        val format: String = "MMM dd.yyyy"
-        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat(format, Locale.US)
+        val format = "MMM dd.yyyy"
+        val simpleDateFormat = SimpleDateFormat(format, Locale.US)
         return simpleDateFormat.format(dateMilli)
     }
 

@@ -118,16 +118,17 @@ class FilterViewModelTest {
 
     @Test
     fun getNbrOfPropertyWithThisQuerySuccess() = runTest {
-        val expectedPropertyList = listOf(PropertyFixtures.PropertyEntityUtils.create())
+        val listProperty = listOf(PropertyFixtures.PropertyEntityUtils.create())
+        val expectedSize = listOf(PropertyFixtures.PropertyEntityUtils.create()).size
         val query = ""
-        whenever(propertyRepository.getAllPropertyFilter(query)).thenReturn(flowOf(expectedPropertyList))
+        whenever(propertyRepository.getAllPropertyFilter(query)).thenReturn(flowOf(listProperty))
 
         val liveData = viewModel.getNbrOfPropertyWithThisQuery(query)
         liveData.observeForever {  }
-        val propertyList = liveData.value
+        val propertySize = liveData.value
 
         verify(propertyRepository).getAllPropertyFilter(query)
-        assertEquals(expectedPropertyList, propertyList)
+        assertEquals(expectedSize, propertySize)
     }
 
     @Test

@@ -75,16 +75,16 @@ class FilterActivity : AppCompatActivity() {
             }
 
             val query: String = viewModel.toQuery(filterFeatureViewState)
-            viewModel.getNbrOfPropertyWithThisQuery(query).observe(this) { listPropertyEntity ->
-                val numberOfPropertyFound = "Nbr of property found : ${listPropertyEntity.size}"
+            viewModel.getNbrOfPropertyWithThisQuery(query).observe(this) { size ->
+                val numberOfPropertyFound = "Nbr of property found : $size"
                 binding.numberOfPropertyFound.text = numberOfPropertyFound
-                if (listPropertyEntity.isEmpty()) {
+                if (size == 0) {
                     binding.numberOfPropertyFound.setTextColor(resources.getColor(R.color.red))
                 } else {
                     binding.numberOfPropertyFound.setTextColor(resources.getColor(R.color.black))
                 }
                 binding.filterButton.setOnClickListener {
-                    if (listPropertyEntity.isEmpty()) {
+                    if (size == 0) {
                         Toast.makeText(this, "No property found, change filter", Toast.LENGTH_SHORT)
                             .show()
                     } else {

@@ -78,7 +78,7 @@ class PropertyRepository @Inject constructor(
 
     private val initialQuery = "SELECT * FROM PropertyEntity ORDER BY id ASC"
 
-    private val queryFilterMutableLiveData = MutableLiveData<String>(initialQuery)
+    private val queryFilterMutableLiveData = MutableLiveData(initialQuery)
 
     fun getQueryFilter(): LiveData<String> {
         return queryFilterMutableLiveData
@@ -99,7 +99,7 @@ class PropertyRepository @Inject constructor(
     )
 
     private val currentFilterValueMutableStateFlow =
-        MutableStateFlow<CurrentFilterValue>(initialFilter)
+        MutableStateFlow(initialFilter)
 
     fun getCurrentFilterValue(): Flow<CurrentFilterValue> {
         return currentFilterValueMutableStateFlow

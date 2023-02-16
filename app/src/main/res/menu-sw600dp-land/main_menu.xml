@@ -27,7 +27,7 @@
             android:id="@+id/edit_current_property"
             android:icon="@drawable/ic_baseline_mode_edit_24"
             android:title="edit_property"
-            app:showAsAction="ifRoom"
+            app:showAsAction="always"
             />
         <item
             android:id="@+id/search"

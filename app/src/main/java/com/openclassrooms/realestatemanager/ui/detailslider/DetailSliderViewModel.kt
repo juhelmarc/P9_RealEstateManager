@@ -31,7 +31,4 @@ class DetailSliderViewModel @Inject constructor(
             }
         return detailSliderLiveData
     }
-
-
-
 }

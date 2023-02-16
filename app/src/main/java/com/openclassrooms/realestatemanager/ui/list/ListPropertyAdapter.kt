@@ -16,7 +16,6 @@ class ListPropertyAdapter(
     private val onItemClicked: (id: Long) -> Unit
 ) : ListAdapter<ListViewState, ListPropertyAdapter.MyViewHolder>(DiffCallback) {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(
         ItemPropertyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
@@ -72,6 +71,4 @@ class ListPropertyAdapter(
             }
         }
     }
-
-
 }

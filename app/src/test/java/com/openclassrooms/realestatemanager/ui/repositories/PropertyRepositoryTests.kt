@@ -12,8 +12,8 @@ import com.openclassrooms.realestatemanager.data.dao.PropertyDao
 import com.openclassrooms.realestatemanager.data.dao.PropertyPriceSurface
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotSame
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotSame
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runTest
@@ -46,19 +46,20 @@ class PropertyRepositoryTests {
 
     @Test
     fun getAllPropertySuccess() = runTest {
-        val expectedPropertyList = listOf<PropertyEntity>(PropertyFixtures.PropertyEntityUtils.create())
+        val expectedPropertyList = listOf(PropertyFixtures.PropertyEntityUtils.create())
         whenever(propertyDao.getAllProperty()).thenReturn(flowOf(expectedPropertyList))
 
         val propertyList = propertyRepository.getAllProperty().toList()[0]
 
         verify(propertyDao).getAllProperty()
         Assert.assertSame(expectedPropertyList, propertyList)
+        assertEquals(expectedPropertyList, propertyList)
     }
 
     @Test
     fun getAllPropertyFilterSuccess() = runTest {
         val property = PropertyFixtures.PropertyEntityUtils.create()
-        val expectedPropertyList = listOf<PropertyEntity>(property)
+        val expectedPropertyList = listOf(property)
         whenever(propertyDao.getAllPropertyFilter(any())).thenReturn(flowOf(expectedPropertyList))
 
         val propertyList : List<PropertyEntity> = propertyRepository.getAllPropertyFilter("").toList()[0]
@@ -79,7 +80,7 @@ class PropertyRepositoryTests {
     @Test
     fun getPropertyByIdFlowSuccess() = runTest {
         val expectedProperty = PropertyFixtures.PropertyEntityUtils.create().copy(id = 1L)
-        val propertyList = listOf<PropertyEntity>(expectedProperty)
+        val propertyList = listOf(expectedProperty)
         whenever(propertyDao.getAllProperty()).thenReturn(flowOf(propertyList))
 
         val property = propertyRepository.getPropertyByIdFlow(1L).first()
@@ -106,7 +107,7 @@ class PropertyRepositoryTests {
         val listPicture = propertyRepository.getAllPicturesOfThisProperty(propertyId).toList()[0]
 
         verify(pictureDao).getAllPropertyPictures(propertyId)
-        Assert.assertSame(expectedListPicture, listPicture)
+        assertEquals(expectedListPicture, listPicture)
     }
 
     @Test
@@ -118,7 +119,7 @@ class PropertyRepositoryTests {
         val agentList = propertyRepository.getAllAgent().toList()[0]
 
         verify(agentDao).getAllAgent()
-        Assert.assertSame(expectedAgentList, agentList)
+        assertEquals(expectedAgentList, agentList)
     }
 
     @Test
@@ -128,7 +129,7 @@ class PropertyRepositoryTests {
         propertyRepository.setCurrentPropertyId(expectedId)
         val id = propertyRepository.getCurrentIdLiveData()
 
-        Assert.assertSame(expectedId, id.value)
+        assertEquals(expectedId, id.value)
     }
 
     @Test
@@ -138,7 +139,7 @@ class PropertyRepositoryTests {
         propertyRepository.setIsAnUpdateProperty(expectedIsAnUpdate)
         val isAnUpdate = propertyRepository.getIsAnUpdatePropertyLiveData()
 
-        Assert.assertSame(expectedIsAnUpdate, isAnUpdate.value)
+        assertEquals(expectedIsAnUpdate, isAnUpdate.value)
     }
 
     @Test
@@ -148,7 +149,6 @@ class PropertyRepositoryTests {
         propertyRepository.registerFilterQueryWhenSubmitButtonClicked(expectedQuery)
         val query = propertyRepository.getQueryFilter()
 
-        Assert.assertSame(expectedQuery, query.value)
         assertEquals(expectedQuery, query.value)
     }
 
@@ -158,8 +158,7 @@ class PropertyRepositoryTests {
 
         propertyRepository.registerCurrentFilterValue( expectedFilterValue)
         val filterValue  = propertyRepository.getCurrentFilterValue().first()
-        //TODO : working with assert equals but not with Assert.assertSame and i cant see diff between expected and actual in the report
-//        Assert.assertSame(expectedFilterValue, filterValue)
+
         assertEquals(expectedFilterValue, filterValue)
     }
 

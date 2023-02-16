@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.lang.Math.pow
-import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.absoluteValue
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @HiltViewModel
@@ -54,8 +53,7 @@ class LoanSimulatorViewModel @Inject constructor() : ViewModel() {
             val monthlyInterest = viewState.interestRate / 100 / 12 / 100
             val nbrOfPeriod = viewState.loanYearDuration * 12
 
-            val monthlyRepayment: Double = (amountToLoan * monthlyInterest) / (1 - pow(
-                (1 + (monthlyInterest).toDouble()),
+            val monthlyRepayment: Double = (amountToLoan * monthlyInterest) / (1 - (1 + (monthlyInterest).toDouble()).pow(
                 (-(nbrOfPeriod).toDouble())
             ))
             val totalInterestCost: Int = ((monthlyRepayment * nbrOfPeriod) - amountToLoan).toInt()

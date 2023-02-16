@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    //
     private val propertyRepository: PropertyRepository,
     private val currentPropertyRepository: CurrentPropertyRepository
 ) : ViewModel() {
@@ -40,6 +39,4 @@ class ListViewModel @Inject constructor(
         currentPropertyRepository.setCurrentId(id)
         propertyRepository.setCurrentPropertyId(id)
     }
-
-
 }

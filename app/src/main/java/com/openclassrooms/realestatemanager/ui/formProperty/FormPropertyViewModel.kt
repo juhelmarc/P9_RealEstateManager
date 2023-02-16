@@ -94,7 +94,6 @@ class FormPropertyViewModel @Inject constructor(
         }
     }
 
-
     private val viewStateEmpty = FormPropertyViewState(
         0L,
         emptyList(),

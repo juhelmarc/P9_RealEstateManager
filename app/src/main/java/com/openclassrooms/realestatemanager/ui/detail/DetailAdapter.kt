@@ -11,9 +11,7 @@ import com.openclassrooms.realestatemanager.data.models.entities.PropertyPicture
 import com.openclassrooms.realestatemanager.databinding.ItemDetailBinding
 
 
-class DetailAdapter(
-
-) : ListAdapter<PropertyPictureEntity, DetailAdapter.MyViewHolder>(DiffCallback) {
+class DetailAdapter : ListAdapter<PropertyPictureEntity, DetailAdapter.MyViewHolder>(DiffCallback) {
     var onItemClicked: ((String) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(
         ItemDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)

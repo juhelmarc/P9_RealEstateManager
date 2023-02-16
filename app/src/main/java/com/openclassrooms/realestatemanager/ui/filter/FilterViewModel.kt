@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.openclassrooms.realestatemanager.data.models.CurrentFilterValue
-import com.openclassrooms.realestatemanager.data.models.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +43,6 @@ class FilterViewModel @Inject constructor(
         }.asLiveData()
     }
 
-
     fun registerCurrentFilterValue(filterFeatureViewState: FilterFeatureViewState) {
         val currentFilterValue = CurrentFilterValue(
             minPriceSelected = filterFeatureViewState.minPriceSelected,
@@ -72,8 +71,10 @@ class FilterViewModel @Inject constructor(
         propertyRepository.deleteCurrentFilter()
     }
 
-    fun getNbrOfPropertyWithThisQuery(query: String): LiveData<List<PropertyEntity>> {
-        return propertyRepository.getAllPropertyFilter(query).asLiveData()
+    fun getNbrOfPropertyWithThisQuery(query: String): LiveData<Int> {
+        return propertyRepository.getAllPropertyFilter(query).map {
+            it.size
+        }.asLiveData()
     }
 
     fun updateFilterPrice(minPriceSelected: Int, maxPriceSelected: Int) {
@@ -144,9 +145,9 @@ class FilterViewModel @Inject constructor(
         val typeStringBuilder = java.lang.StringBuilder()
         val townStringBuilder = java.lang.StringBuilder()
 
-        val priceQuery: String =
+        val priceQuery =
             "SELECT * FROM PropertyEntity WHERE (price BETWEEN ${filterFeatureViewState.minPriceSelected} AND ${filterFeatureViewState.maxPriceSelected})"
-        val surfaceQuery: String =
+        val surfaceQuery =
             " AND (surface BETWEEN ${filterFeatureViewState.minSurfaceSelected} AND ${filterFeatureViewState.maxSurfaceSelected})"
         val agentNameQuery =
             if (filterFeatureViewState.agentNameSelected == "") "" else " AND (agentName = '${filterFeatureViewState.agentNameSelected}')"

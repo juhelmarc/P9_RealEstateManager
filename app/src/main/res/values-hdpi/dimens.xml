@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <bool name="isTablet">false</bool>
-
-    <dimen name="icon_detail">18dp</dimen>
-    <dimen name="margin_start_bottom_view_detail">16dp</dimen>
-    <dimen name="marge_between_cardview_detail">4dp</dimen>
-
-</resources>

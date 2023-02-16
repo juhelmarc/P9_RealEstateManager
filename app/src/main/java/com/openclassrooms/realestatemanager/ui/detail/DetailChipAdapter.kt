@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ItemChipDetailBinding
 
-class DetailChipAdapter(
-) : ListAdapter<ChipPoiViewStateDetail, DetailChipAdapter.MyViewHolder>(DiffCallback) {
+class DetailChipAdapter : ListAdapter<ChipPoiViewStateDetail, DetailChipAdapter.MyViewHolder>(
+    DiffCallback
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder = MyViewHolder(
         ItemChipDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)

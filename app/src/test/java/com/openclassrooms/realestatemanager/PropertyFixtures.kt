@@ -9,7 +9,6 @@ import com.openclassrooms.realestatemanager.ui.list.ListViewState
 import com.openclassrooms.realestatemanager.ui.map.MapsViewState
 
 class PropertyFixtures {
-    private val property = PropertyEntityUtils.create()
 
     object PropertyEntityUtils {
         fun create() : PropertyEntity {

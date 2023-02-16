@@ -34,10 +34,8 @@ class MapsActivity : AppCompatActivity(),
 
     private val viewModel by viewModels<MapsViewModel>()
 
-
     private lateinit var map: GoogleMap
     private var permissionDenied = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,25 +112,23 @@ class MapsActivity : AppCompatActivity(),
         // [END maps_check_location_permission]
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     private fun addMarkers(googleMap: GoogleMap, listMapsViewState: List<MapsViewState>) {
         listMapsViewState.forEach { viewState ->
             if (viewState.lat != null && viewState.lng != null) {
-                val marker = googleMap.addMarker(
+                googleMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(viewState.lat, viewState.lng))
                         .title("${viewState.price} $  ${viewState.type}")
                 )
-
             }
         }
-
         map.setOnMarkerClickListener { marker ->
             viewModel.getMapsViewStateListLiveData().observe(this) { listMapsViewState ->
                 listMapsViewState.forEach { viewState ->
                     if (LatLng(viewState.lat!!, viewState.lng!!) == marker.position) {
                         viewModel.onItemMarkerClick(viewState.id)
                         finish()
-//                        startActivity(Intent(this@MapsActivity, DetailActivity::class.java))
                     }
                 }
             }

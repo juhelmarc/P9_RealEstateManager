@@ -23,7 +23,7 @@ class DetailSliderFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDetailSliderBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -32,12 +32,11 @@ class DetailSliderFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getDetailSlider().observe(viewLifecycleOwner) {
             if (it.listPicture != null) {
-                var slideModelList: MutableList<SlideModel> = mutableListOf<SlideModel>()
+                val slideModelList: MutableList<SlideModel> = mutableListOf()
                 for (propertyPicture in it.listPicture) {
                     slideModelList.add(SlideModel(propertyPicture.url, propertyPicture.title))
                 }
                 binding.imageSlider.setImageList(slideModelList, ScaleTypes.CENTER_CROP)
-
             }
         }
     }

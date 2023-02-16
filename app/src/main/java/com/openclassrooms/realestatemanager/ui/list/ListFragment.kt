@@ -43,6 +43,5 @@ class ListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
 

@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                     DetailFragment()
                 )
                 .commitNow()
-
         }
         viewModel.navigateSingleLiveEvent.observe(this) {
             when (it) {

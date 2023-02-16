@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.*
 import com.openclassrooms.realestatemanager.AgentFixtures
 import com.openclassrooms.realestatemanager.PropertyFixtures
 import com.openclassrooms.realestatemanager.PropertyPictureFixtures
-import com.openclassrooms.realestatemanager.data.PoiList
 import com.openclassrooms.realestatemanager.data.models.entities.PropertyPictureEntity
 import com.openclassrooms.realestatemanager.data.repositories.PropertyRepository
 import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyViewModel
@@ -38,7 +37,6 @@ class FormPropertyViewModelTest {
         val formViewStateEdit = PropertyFixtures.FormPropertyViewStateEditUtils.create()
         val property = PropertyFixtures.PropertyEntityUtils.create()
         val pictureList = PropertyPictureFixtures.ListPictureUtils.create()
-
     }
 
     @get:Rule

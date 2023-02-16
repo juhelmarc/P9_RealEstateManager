@@ -22,7 +22,6 @@ sealed class DetailViewState() {
     ) : DetailViewState()
 
     object Empty : DetailViewState()
-
 }
 
 data class ChipPoiViewStateDetail(

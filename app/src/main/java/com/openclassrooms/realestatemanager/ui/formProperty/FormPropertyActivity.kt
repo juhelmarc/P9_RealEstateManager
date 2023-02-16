@@ -289,23 +289,22 @@ class FormPropertyActivity : AppCompatActivity() {
     }
 
     private fun formatDate(dateMilli: Long): String {
-        val format: String = "MMM dd.yyyy"
-        val simpleDateFormat: SimpleDateFormat = SimpleDateFormat(format, Locale.US)
+        val format = "MMM dd.yyyy"
+        val simpleDateFormat = SimpleDateFormat(format, Locale.US)
         return simpleDateFormat.format(dateMilli)
     }
 
     private fun getLatLngFromAddress(address: String): LatLng? {
         val latLng: LatLng?
         val geocoder = Geocoder(this)
-        var listAddress: List<Address>? = listOf<Address>()
-        listAddress = geocoder.getFromLocationName(address, 5)
-        if (listAddress?.isNotEmpty() == true) {
-            latLng = LatLng(
+        val listAddress: List<Address>? = geocoder.getFromLocationName(address, 5)
+        latLng = if (listAddress?.isNotEmpty() == true) {
+            LatLng(
                 (listAddress as MutableList<Address>)[0].latitude,
-                (listAddress as MutableList<Address>)[0].longitude
+                listAddress[0].longitude
             )
         } else {
-            latLng = null
+            null
         }
         return latLng
     }

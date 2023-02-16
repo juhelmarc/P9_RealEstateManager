@@ -6,7 +6,7 @@ class PropertyPictureFixtures {
 
     object ListPictureUtils {
         fun create() : List<PropertyPictureEntity> {
-            return listOf<PropertyPictureEntity>(
+            return listOf(
                 PictureUtils1.create(),
                 PictureUtils2.create()
             )

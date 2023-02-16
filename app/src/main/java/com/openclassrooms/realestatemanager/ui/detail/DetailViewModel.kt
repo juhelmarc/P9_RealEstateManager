@@ -65,7 +65,6 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-
     fun setIsAnUpdate(isAnUpdate: Boolean) {
         propertyRepository.setIsAnUpdateProperty(isAnUpdate)
     }
