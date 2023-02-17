@@ -111,8 +111,4 @@ class DetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-        private val API_KEY = bundleOf().getString("com.google.android.geo.API_KEY")
-    }
 }
