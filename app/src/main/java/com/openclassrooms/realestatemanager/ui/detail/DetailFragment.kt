@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentDetailBinding
 import com.openclassrooms.realestatemanager.ui.detailslider.DetailSliderActivity
@@ -52,6 +54,8 @@ class DetailFragment : Fragment() {
             startActivity(Intent(context, DetailSliderActivity::class.java))
         }
 
+
+
         viewModel.getDetailLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is DetailViewState.Selected -> {
@@ -70,7 +74,7 @@ class DetailFragment : Fragment() {
                                 "&zoom=19" +
                                 "&size=400x400" +
                                 "&maptype=roadmap" +
-                                "&key=AIzaSyCyn3_Hvu0b4PlANLre07Wvme5VCR4qewo"
+                                "&key=${BuildConfig.MAPS_API_KEY}"
                     )
                     binding.staticMap.setBackgroundColor(resources.getColor(R.color.black, ))
                     binding.emptyListProperty.visibility = View.INVISIBLE
@@ -106,5 +110,9 @@ class DetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val API_KEY = bundleOf().getString("com.google.android.geo.API_KEY")
     }
 }

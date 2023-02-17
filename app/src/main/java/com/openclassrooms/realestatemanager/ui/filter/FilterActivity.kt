@@ -122,7 +122,7 @@ class FilterActivity : AppCompatActivity() {
 
             val listTypeSelected: MutableList<String> = mutableListOf()
             val listArrayType = filterFeatureViewState.listOfType.toTypedArray()
-            val selectedType: BooleanArray = BooleanArray(listArrayType.size)
+            val selectedType = BooleanArray(listArrayType.size)
             if (filterFeatureViewState.listOfTypeSelected.isNotEmpty()) {
                 filterFeatureViewState.listOfType.forEach { type ->
                     if (filterFeatureViewState.listOfTypeSelected.contains(type)) {

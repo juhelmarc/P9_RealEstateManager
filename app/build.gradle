@@ -5,6 +5,9 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'kotlin-kapt'
 }
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
     compileSdkVersion 33
@@ -15,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "MAPS_API_KEY", localProperties['mapsApiKey']
     }
 
     compileOptions {
@@ -29,6 +34,8 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+
 
     buildTypes {
         release {
