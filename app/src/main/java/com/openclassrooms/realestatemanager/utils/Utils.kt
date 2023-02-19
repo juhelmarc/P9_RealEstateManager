@@ -62,8 +62,5 @@ class Utils @Inject constructor(
             it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
             it.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
         } ?: false
-
     }
-
-
 }

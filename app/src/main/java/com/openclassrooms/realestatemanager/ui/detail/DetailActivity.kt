@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import com.android.volley.BuildConfig
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
 import com.openclassrooms.realestatemanager.ui.formProperty.FormPropertyActivity

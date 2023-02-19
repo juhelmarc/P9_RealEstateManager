@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -137,7 +138,9 @@ class FormPropertyActivity : AppCompatActivity() {
             if (!hasFocus) {
                 viewModel.updatePostalCode(binding.postalCodeInput.text.toString())
                 if (binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
-                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()))
+                    getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()) {
+                        viewModel.updateLatLng(it)
+                    }
                 }
             }
         }
@@ -145,7 +148,9 @@ class FormPropertyActivity : AppCompatActivity() {
             if (!hasFocus) {
                 viewModel.updateAddress(binding.addressInput.text.toString())
                 if (binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
-                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()))
+                    getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()) {
+                        viewModel.updateLatLng(it)
+                    }
                 }
             }
         }
@@ -153,7 +158,10 @@ class FormPropertyActivity : AppCompatActivity() {
             if (!hasFocus) {
                 viewModel.updateTown(binding.townInput.text.toString())
                 if (binding.townInput.text.toString() != "" && binding.addressInput.text.toString() != "" && binding.postalCodeInput.text.toString() != "") {
-                    viewModel.updateLatLng(getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()))
+                    getLatLngFromAddress(binding.townInput.text.toString() + ", " + binding.addressInput.text.toString() + ", " + binding.postalCodeInput.toString()) {
+                        viewModel.updateLatLng(it)
+                    }
+
                 }
             }
         }
@@ -294,19 +302,34 @@ class FormPropertyActivity : AppCompatActivity() {
         return simpleDateFormat.format(dateMilli)
     }
 
-    private fun getLatLngFromAddress(address: String): LatLng? {
-        val latLng: LatLng?
+    private fun getLatLngFromAddress(address: String, onSuccess: (latLng :LatLng?) -> Unit) {
         val geocoder = Geocoder(this)
-        val listAddress: List<Address>? = geocoder.getFromLocationName(address, 5)
-        latLng = if (listAddress?.isNotEmpty() == true) {
-            LatLng(
-                (listAddress as MutableList<Address>)[0].latitude,
-                listAddress[0].longitude
-            )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            geocoder.getFromLocationName(address, 5, object:Geocoder.GeocodeListener {
+                override fun onGeocode(addresses: MutableList<Address>) {
+                    onSuccess(getLatLngFromAddress(addresses))
+                }
+                override fun onError(errorMessage: String?) {
+                    super.onError(errorMessage)
+                    onSuccess(getLatLngFromAddress(emptyList()))
+                }
+            })
+        } else {
+            geocoder.getFromLocationName(address, 5)?.let {
+                onSuccess(getLatLngFromAddress(it))
+            }?: kotlin.run {
+                onSuccess(getLatLngFromAddress(emptyList()))
+            }
+        }
+    }
+
+    private fun getLatLngFromAddress(listAddress : List<Address>) : LatLng? {
+       return if (listAddress.isNotEmpty()) {
+           LatLng((listAddress as MutableList<Address>)[0].latitude, listAddress[0].longitude)
         } else {
             null
         }
-        return latLng
     }
 
     companion object {

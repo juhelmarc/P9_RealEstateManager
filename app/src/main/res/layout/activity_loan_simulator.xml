@@ -39,7 +39,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:endIconMode="clear_text"
             >
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/borrow_input"
                 android:layout_width="match_parent"
@@ -48,6 +47,20 @@
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/interest_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/borrow_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:padding="8dp"
+            android:text="Interest :"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
         <com.google.android.material.slider.Slider
             android:id="@+id/slider_interest"
             android:layout_width="0dp"
@@ -55,7 +68,7 @@
             android:layout_marginTop="@dimen/standard_margin"
             android:valueFrom="0.00"
             android:valueTo="10.00"
-            app:layout_constraintTop_toBottomOf="@id/borrow_layout"
+            app:layout_constraintTop_toBottomOf="@id/interest_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/interest_layout"
             android:contentDescription="sliderInterest"
@@ -80,15 +93,29 @@
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/loan_duration_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/interest_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:padding="8dp"
+            android:text="Loan duration :"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_title_detail"/>
+
         <com.google.android.material.slider.Slider
             android:id="@+id/slider_duration"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
-            android:valueFrom="1"
-            android:valueTo="30"
+            android:valueFrom="0"
+            android:valueTo="25"
             android:stepSize="1"
-            app:layout_constraintTop_toBottomOf="@id/interest_layout"
+            app:layout_constraintTop_toBottomOf="@id/loan_duration_text_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/duration_layout"
             android:contentDescription="sliderDuration"
@@ -291,8 +318,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
-            android:valueFrom="1"
-            android:valueTo="30"
+            android:valueFrom="0"
+            android:valueTo="25"
             android:stepSize="1"
             app:layout_constraintTop_toBottomOf="@id/income_layout"
             app:layout_constraintStart_toStartOf="parent"

@@ -16,7 +16,7 @@ class LoanSimulatorViewModel @Inject constructor() : ViewModel() {
     private val loanSimulatorInitialViewState = LoanSimulatorViewState(
         borrowAmount = 0,
         interestRate = 0f,
-        loanYearDuration = 1.0f,
+        loanYearDuration = 0.0f,
         monthlyIncome = 0,
         personalContribution = 0,
         monthlyRepayment = 0.0f,
@@ -24,7 +24,7 @@ class LoanSimulatorViewModel @Inject constructor() : ViewModel() {
         totalInterestCost = 0,
         totalAmountToBorrow = 0,
         totalMonthlyIncome = 0,
-        borrowDurationInYear = 1.0f,
+        borrowDurationInYear = 0.0f,
         monthlyIndebtedness = 0f,
     )
 
@@ -98,16 +98,22 @@ class LoanSimulatorViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateInterestRate(interestRate: String) {
-        if (interestRate != "") {
+        if (interestRate != "" && interestRate.toFloat() <= 10f) {
             updateLoanSimulatorViewState(
                 getLoanSimulatorViewState().copy(
                     interestRate = (interestRate.toFloat() * 100).roundToInt().toFloat()
                 )
             )
+        } else if (interestRate != "" && interestRate.toFloat() > 10f) {
+            updateLoanSimulatorViewState(
+                getLoanSimulatorViewState().copy(
+                    interestRate = 10f * 100
+                )
+            )
         } else {
             updateLoanSimulatorViewState(
                 getLoanSimulatorViewState().copy(
-                    interestRate = 0f
+                    interestRate = 0.1f
                 )
             )
         }
@@ -116,16 +122,22 @@ class LoanSimulatorViewModel @Inject constructor() : ViewModel() {
 
     fun updateLoanYearDuration(loanYearDuration: String) {
 
-        if (loanYearDuration != "") {
+        if (loanYearDuration != "" && loanYearDuration.toFloat() <= 25) {
             updateLoanSimulatorViewState(
                 getLoanSimulatorViewState().copy(
                     loanYearDuration = loanYearDuration.toFloat()
                 )
             )
+        } else if (loanYearDuration != "" && loanYearDuration.toFloat() >= 25) {
+            updateLoanSimulatorViewState(
+                getLoanSimulatorViewState().copy(
+                    loanYearDuration = 25f
+                )
+            )
         } else {
             updateLoanSimulatorViewState(
                 getLoanSimulatorViewState().copy(
-                    loanYearDuration = 1f
+                    loanYearDuration = 0f
                 )
             )
         }

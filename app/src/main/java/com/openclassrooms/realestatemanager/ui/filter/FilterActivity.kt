@@ -1,12 +1,12 @@
 package com.openclassrooms.realestatemanager.ui.filter
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.slider.RangeSlider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.models.entities.AgentEntity
@@ -79,9 +79,9 @@ class FilterActivity : AppCompatActivity() {
                 val numberOfPropertyFound = "Nbr of property found : $size"
                 binding.numberOfPropertyFound.text = numberOfPropertyFound
                 if (size == 0) {
-                    binding.numberOfPropertyFound.setTextColor(resources.getColor(R.color.red))
+                    binding.numberOfPropertyFound.setTextColor(ContextCompat.getColor(this,R.color.red))
                 } else {
-                    binding.numberOfPropertyFound.setTextColor(resources.getColor(R.color.black))
+                    binding.numberOfPropertyFound.setTextColor(ContextCompat.getColor(this, R.color.black))
                 }
                 binding.filterButton.setOnClickListener {
                     if (size == 0) {
@@ -118,8 +118,7 @@ class FilterActivity : AppCompatActivity() {
             binding.agentInput.setAdapter(arrayAdapter)
             binding.agentInput.dismissDropDown()
 
-            //Mutil drop down memnu TYPE
-
+            //Multi drop down menu TYPE
             val listTypeSelected: MutableList<String> = mutableListOf()
             val listArrayType = filterFeatureViewState.listOfType.toTypedArray()
             val selectedType = BooleanArray(listArrayType.size)
@@ -158,15 +157,15 @@ class FilterActivity : AppCompatActivity() {
 
                 builder.setMultiChoiceItems(
                     listArrayType,
-                    selectedType,
-                    DialogInterface.OnMultiChoiceClickListener { _, which, isChecked ->
-                        if (isChecked) {
-                            listTypeSelected.add(listArrayType[which])
-                        } else {
-                            listTypeSelected.remove(listArrayType[which])
-                        }
-                    })
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
+                    selectedType
+                ) { _, which, isChecked ->
+                    if (isChecked) {
+                        listTypeSelected.add(listArrayType[which])
+                    } else {
+                        listTypeSelected.remove(listArrayType[which])
+                    }
+                }
+                builder.setPositiveButton("OK") { _, _ ->
                     val typeStringBuilder = StringBuilder("")
                     listTypeSelected.forEach {
                         typeStringBuilder.append(it)
@@ -176,22 +175,22 @@ class FilterActivity : AppCompatActivity() {
                     }
                     binding.textViewType.text = typeStringBuilder
                     viewModel.updateFilterListType(listTypeSelected)
-                })
-                builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                }
+                builder.setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
-                })
-                builder.setNeutralButton("Clear all", DialogInterface.OnClickListener { _, _ ->
+                }
+                builder.setNeutralButton("Clear all") { _, _ ->
                     selectedType.forEach {
                         selectedType[selectedType.indexOf(it)] = false
                         listTypeSelected.clear()
                     }
                     binding.textViewType.text = ""
                     viewModel.updateFilterListType(listTypeSelected)
-                })
+                }
                 builder.show()
             }
-            //Mutil drop down memnu TOWN
-            val selectedTown: BooleanArray = BooleanArray(filterFeatureViewState.listOfTown.size)
+            //Multi drop down menu TOWN
+            val selectedTown= BooleanArray(filterFeatureViewState.listOfTown.size)
             val listTownSelected: MutableList<String> = mutableListOf()
             val listArrayTown = filterFeatureViewState.listOfTown.toTypedArray()
             if (filterFeatureViewState.listOfTownSelected.isNotEmpty()) {
@@ -227,15 +226,15 @@ class FilterActivity : AppCompatActivity() {
                 builder.setCancelable(false)
                 builder.setMultiChoiceItems(
                     listArrayTown,
-                    selectedTown,
-                    DialogInterface.OnMultiChoiceClickListener { _, which, isChecked ->
-                        if (isChecked) {
-                            listTownSelected.add(listArrayTown[which])
-                        } else {
-                            listTownSelected.remove(listArrayTown[which])
-                        }
-                    })
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
+                    selectedTown
+                ) { _, which, isChecked ->
+                    if (isChecked) {
+                        listTownSelected.add(listArrayTown[which])
+                    } else {
+                        listTownSelected.remove(listArrayTown[which])
+                    }
+                }
+                builder.setPositiveButton("OK") { _, _ ->
                     val townStringBuilder = StringBuilder("")
                     listTownSelected.forEach {
                         typeStringBuilder.append(it)
@@ -245,18 +244,18 @@ class FilterActivity : AppCompatActivity() {
                     }
                     binding.textViewTown.text = townStringBuilder
                     viewModel.updateFilterListTown(listTownSelected)
-                })
-                builder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                }
+                builder.setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
-                })
-                builder.setNeutralButton("Clear all", DialogInterface.OnClickListener { _, _ ->
+                }
+                builder.setNeutralButton("Clear all") { _, _ ->
                     selectedTown.forEach {
                         selectedTown[selectedTown.indexOf(it)] = false
                         listTownSelected.clear()
                     }
                     binding.textViewTown.text = ""
                     viewModel.updateFilterListTown(listOf())
-                })
+                }
                 builder.show()
             }
         }

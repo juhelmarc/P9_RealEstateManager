@@ -26,6 +26,7 @@ class FilterFixtures {
             )
         }
     }
+
     object CurrentFilterValueUtils {
         fun create() : CurrentFilterValue {
             return CurrentFilterValue(
