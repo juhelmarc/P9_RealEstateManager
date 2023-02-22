@@ -21,17 +21,13 @@ class FormPropertyViewModel @Inject constructor(
 
     private val messageError = "Is mandatory"
 
-
-
     fun getAgentListLiveData() : LiveData<List<AgentEntity>> {
         return propertyRepository.getAllAgent().asLiveData()
     }
 
-
     fun getIsAnUpdate() : Boolean  {
       return  propertyRepository.getIsAnUpdatePropertyLiveData().value!!
     }
-
 
     fun getInitialViewStateLiveData(): LiveData<FormPropertyViewState> {
       return  propertyRepository.getCurrentIdLiveData().switchMap { id ->
@@ -152,7 +148,6 @@ class FormPropertyViewModel @Inject constructor(
         return mutableStateFlowViewState.asLiveData()
     }
 
-
     fun onSubmitButtonClicked(): Boolean {
         if (checkError()) {
             updatePropertyEntity(getPropertyViewState())
@@ -165,7 +160,6 @@ class FormPropertyViewModel @Inject constructor(
             updatePropertyViewState(
                 getPropertyViewState().copy(agentError = "Chose an agent")
             )
-            //Guard de swift return true
         } else {
             updatePropertyViewState(
                 getPropertyViewState().copy(agentError = null)
@@ -180,7 +174,6 @@ class FormPropertyViewModel @Inject constructor(
                 getPropertyViewState().copy(typeError = null)
             )
         }
-
         if (getPropertyViewState().postalCode.toString().length != 5) {
             updatePropertyViewState(
                 getPropertyViewState().copy(postalCodeError = "5 numbers are required")

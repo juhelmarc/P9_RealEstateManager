@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -37,9 +38,12 @@ class FormPropertyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityFormPropertyBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.getInitialViewStateLiveData().observe(this) {
-            viewModel.setInitialViewState(it)
+        if(savedInstanceState == null) {
+            viewModel.getInitialViewStateLiveData().observe(this) {
+                viewModel.setInitialViewState(it)
+            }
         }
+
         //Entry date picker
         val entryDatePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Select entry date")
@@ -104,12 +108,8 @@ class FormPropertyActivity : AppCompatActivity() {
                     startForProfileImageResult.launch(intent)
                 }
         }
-        //Update Data
-        binding.typeInput.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                viewModel.updateType(binding.typeInput.text.toString())
-            }
-        }
+
+        binding.typeInput.doAfterTextChanged { viewModel.updateType(binding.typeInput.text.toString()) }
 
         binding.surfaceInput.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {

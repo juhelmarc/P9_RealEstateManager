@@ -21,7 +21,6 @@ class Utils @Inject constructor(
 ) {
 
     companion object {
-
         @RequiresApi(Build.VERSION_CODES.O)
         val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     }
